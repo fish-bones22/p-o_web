@@ -1,0 +1,19 @@
+  .setting-container {
+    padding-top: 80px;
+  }
+  .admin-page-container {
+    position: relative;
+    top: 100px;
+  }
+  ul.nav-pills {
+    position: fixed;
+    top: 120px;
+  }
+  .search-bar {
+    position: relative;
+    float: right;
+    top: 75px;
+  }
+  .alert {
+    text-align: center;
+  }

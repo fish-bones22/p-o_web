@@ -1,0 +1,73 @@
+.logform-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  z-index: 9001;
+}
+.logform-outside {
+  width: inherit;
+  height: inherit;
+}
+.logform {
+  background: white;
+  color: black;
+  padding: 20px;
+  max-width: 400px;
+  left: -9000px;
+  right: 10px;
+  margin: auto;
+  margin-bottom: 50px;
+  border-radius: 10px;
+  top: 25%;
+  box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+  position: absolute;
+  z-index: 9002;
+}
+.logform button {
+  margin: 0;
+}
+.close {
+  right: 10px;
+  margin-left: auto;
+  top: 5px;
+  position: absolute;
+}
+.tab-group {
+  list-style: none;
+  padding: 0;
+  padding-top: 8px;
+  margin: 0 0 40px 0;
+}
+.tab-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.tab-group li a {
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  float: left;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: .5s ease;
+  transition: .5s ease;
+}
+.tab-group li a:hover {
+  background: #3f6daa;
+  color: white;
+}
+.tab-group .active {
+  background: #1d4e6c;
+  color: white;
+}
+.tab-content > div:last-child {
+  display: none;
+}
+.forgot_pw_link {
+  font-size: 15px;
+  padding: 0;
+}

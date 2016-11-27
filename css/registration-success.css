@@ -1,0 +1,10 @@
+.success-text {
+  position: relative;
+  top: 150px;
+}
+.reg-success {
+  color: rgb(76, 147, 82);
+}
+.reg-success, .details {
+  line-height: 1;
+}
