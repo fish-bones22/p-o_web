@@ -31,6 +31,12 @@
   $result1 = $db->query($query1);
   $numresult1 = $result->num_rows;
   $row1 = $result1->fetch_assoc();
+
+  $query2 = "SELECT * FROM `bus2` WHERE `Bus_No`=".$_REQUEST['bus-number'].";";
+  $result2 = $db->query($query2);
+  $numresult2 = $result2->num_rows;
+  $row2 = $result2->fetch_assoc();
+
   $db->close();
 ?>
 <!DOCTYPE html>
@@ -94,7 +100,9 @@
 
         <div class="container-fluid form-group">
           <label for="smart">Smart Padala: <?php echo $row1['smart_number'];?></label><br>
-          <label for="smart">Send to mobile number: <?php echo $row1['mobile_number'];?></label>
+          <label for="smart">Send to mobile number: <?php echo $row1['mobile_number'];?></label><br>
+          <label for="smart">Driver: <?php echo $row2['Bus_Driver'];?></label><br>
+          <label for="smart">Conductor: <?php echo $row2['Bus_Conductor'];?></label>
         </div>
 
         <input type="hidden" value="" id="smart">
