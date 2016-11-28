@@ -5,6 +5,7 @@ $pw = $_REQUEST['Password1'];
 $email = $_REQUEST['email'];
 $phone = $_REQUEST['Phone'];
 $admin = "No";
+$address = $_REQUEST['address'];
 
 if (!get_magic_quotes_gpc()) {
   $fn = addslashes($fn);
@@ -16,7 +17,7 @@ if (!get_magic_quotes_gpc()) {
 
 include 'connect_to_db.php';
 
-$reg = "INSERT INTO `user` values ('".$fn."', '".$ln."', '".$email."', '".$pw."', '".$phone."', '".$admin."')";
+$reg = "INSERT INTO `user` values ('".$fn."', '".$ln."', '".$email."', '".$pw."', '".$phone."', '".$admin."', '".$address."');";
 
 $reg_result = $db->query($reg);
 $db->close();
@@ -27,6 +28,7 @@ if ($reg_result) {
   header("Location:../registration-success.php");
   exit;
 } else {
+  echo $reg;
   echo 'failed';
   $_SESSION['error_signup'] = true;
   header("Location:../index.php");
