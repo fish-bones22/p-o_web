@@ -87,14 +87,14 @@
     <div class="col-sm-offset-2">
 
        <!-- Search bar -->
-      <div class="col-md-11">
+      <!--<div class="col-md-11">
         <div class="form-inline search-bar">
           <input type="text" name="search" class="form-control">
           <button type="submit" class="btn btn-default btn-sm" name="submit">
             <span class="glyphicon glyphicon-search"></span>
           </button>
         </div>
-      </div>
+      </div>-->
 
 
       <div id="reservation-list" class="setting-container col-md-11">

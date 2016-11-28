@@ -13,7 +13,7 @@
 
   date_default_timezone_set('Asia/Manila');
   $date = date('Y-m-d', time());
-  $tomorrow = date("Y-m-d", strtotime("+1 day"));
+  $tomorrow = date("Y-m-d", strtotime("+3 day"));
 
   function militaryToStandardClock($milTime) {
 
