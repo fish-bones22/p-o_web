@@ -201,11 +201,11 @@
                 <div class=\"container-fluid form-group\">
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Driver:</label>
-                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" disabled>
+                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Conductor:</label>
-                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" disabled>
+                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                 </div><br>";
               }

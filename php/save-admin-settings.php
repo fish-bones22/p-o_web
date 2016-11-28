@@ -12,7 +12,6 @@
   $fb_link = $_REQUEST['fb-link-input'];
   $email = $_REQUEST['email-input'];
 
-
   include 'connect_to_db.php';
 
   $query = "SELECT password FROM user WHERE email LIKE '".$_SESSION['email']."'";
@@ -75,6 +74,17 @@
         emailReceipt($_REQUEST['reserve-number-'.$i], $row["email"]);
       }
     }
+    $queryselect = "SELECT * FROM bus2";
+    $resultselect = $db->query($queryselect);
+    $numsultselect = $resultselect->num_rows;
+    for ($i=0; $i < $numsultselect; $i++) {
+      $row = $resultselect->fetch_assoc();
+      $bus_driver = $_REQUEST['bus_driver'.$row['Bus_Code']];
+      $bus_conductor = $_REQUEST['bus_conductor'.$row['Bus_Code']];
+      $updatequerybusdc = "UPDATE `bus2` SET `Bus_Driver`='$bus_driver', `Bus_Conductor`='$bus_conductor' WHERE `Bus_Code`=".$row['Bus_Code']."";
+      $resultquery = $db->query($updatequerybusdc);
+    }
+
     $db->close();
     echo $updatequery;
     # Then go back
