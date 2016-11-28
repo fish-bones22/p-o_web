@@ -1,6 +1,6 @@
 <?php
   session_start();
-
+  require_once("../vendor/phpmailer/PHPMailerAutoload.php");
   $reserve_number = array();
   $length = $_REQUEST['reserve-number-length'];
   for ($i=0; $i < $length; $i++) {
@@ -8,7 +8,7 @@
   }
   $smart_number = $_REQUEST['smart-number-input'];
   $mobile_number = $_REQUEST['mobile-number-input'];
-  $about = $_REQUEST['about-input-after'];
+  $about = $_REQUEST['about-input'];
   $fb_link = $_REQUEST['fb-link-input'];
   $email = $_REQUEST['email-input'];
 
@@ -20,6 +20,22 @@
   $result = $db->query($query);
   $numresults = $result->num_rows;
   $row = $result->fetch_assoc();
+
+  function emailReceipt($res_num, $email_add) {
+    copy("../temp/".$res_num.".pdf", "../transaction/receipt/".$res_num.".pdf");
+
+    $email = new PHPMailer();
+    $email->From      = "P&O Transport Corporation";
+    $email->FromName  = "P&O Web Admin";
+    $email->Subject   = "Payment Confirmation";
+    $email->body      = "Your payment has been confirmed.\nOfficial receipt is attached in this email.";
+    $email->AddAddress= ($email_add);
+
+    $file_to_attach = "../transaction/receipt/";
+    $email->AddAttachment($file_to_attach, $res_num.".pdf");
+    unlink("../temp/".$res_num.".pdf");
+    return $email->Send();
+  }
 ?>
 
 <!DOCTYPE html>
@@ -48,15 +64,15 @@
         $updatequery = "UPDATE `reserve` SET `status`='Yes' WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
         $updateresult2 = $db->query($updatequery);
         // Get info from reserve table and copy to transaction table
-        /*$query = "SELECT * FROM `reserve` WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
-        $result = $db->query($query);
-        $numresults = $result->num_rows;
-        $row = $result->fetch_assoc();*/
-
         $updatequery = "INSERT INTO `transaction` (`Bus_No`, `email`,`rdate`, tPrice, `Reserve_Code`, `tdate`)
                         SELECT `Bus_No`, `email`,`rDate`, tPrice, `Reserve_Code`, `tDate` FROM `reserve`
                         WHERE `Reserve_Code`='".$_REQUEST['reserve-number-'.$i]."';";
         $updateresult3 = $db->query($updatequery);
+        $getemailquery = "SELECT `email` FROM `reserve` WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
+        $queryresult = $db->query($getemailquery);
+        $numresults = $result->num_rows;
+        $row = $result->fetch_assoc();
+        emailReceipt($_REQUEST['reserve-number-'.$i], $row["email"]);
       }
     }
     $db->close();

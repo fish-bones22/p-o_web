@@ -235,7 +235,7 @@
                   $querytd = "SELECT * FROM `transaction` INNER JOIN `user` ON `transaction`.`email`=`user`.`email`";
                   $restd = $db->query($querytd);
                   $numsult = $restd->num_rows;
-
+                  $db->close();
                   for ($i=0; $i < $numsult; $i++) {
                     $row2 = $restd->fetch_assoc();
                     echo
@@ -269,7 +269,7 @@
 
               <div class="form-group container-fluid">
                 <label>About Us</label>
-                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" disabled><?php echo $about;?></textarea>
+                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" name="about-input" form="inputform" disabled><?php echo $about;?></textarea>
                 <div class="col-sm-6">
                   <label>Facebook:</label>
                   <input type="text" id="fb-link-input" name="fbook" class="form-control front-page-settings-input" value=<?php echo $fb_link;?> disabled>
@@ -313,11 +313,10 @@
               <a class="btn btn-default" id="modal-no-button" data-dismiss="modal" aria-hidden="true" role="button">No</a>
               <div id="hidden-inputs">
                 <input type="hidden" name="reserve-number-length" id="reserve-number-length" value=0>
-                <input type="hidden" name="smart-number-input" id="smart-number-input-after" value=<?php echo $smart_number; ?>>
-                <input type="hidden" name="mobile-number-input" id="mobile-number-input-after" value=<?php echo $mobile_number; ?>>
-                <input type="hidden" name="about-input-after" id="about-input-after" value=<?php echo $about; ?>>
-                <input type="hidden" name="fb-link-input" id="fb-link-input-after" value=<?php echo $fb_link; ?>>
-                <input type="hidden" name="email-input" id="email-input-after" value=<?php echo $email; ?>>
+                <input type="hidden" name="smart-number-input" id="smart-number-input-after" value="<?php echo $smart_number; ?>">
+                <input type="hidden" name="mobile-number-input" id="mobile-number-input-after" value="<?php echo $mobile_number; ?>">
+                <input type="hidden" name="fb-link-input" id="fb-link-input-after" value="<?php echo $fb_link; ?>">
+                <input type="hidden" name="email-input" id="email-input-after" value="<?php echo $email; ?>">
               </div>
             </div>
           </form>
@@ -327,5 +326,5 @@
 </body>
       <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
       <script src="js/admin.js"></script>
-            <script src="vendor/jspdf/jspdf.min.js"></script>
+      <script src="vendor/jspdf/jspdf.min.js"></script>
 </html>

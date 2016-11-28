@@ -48,7 +48,7 @@ function initLocations() {
   } else if (destination === 'Pagbilao') {
     latitude2 = 13.9849;
     longitude2 = 121.7423;
-  } else if (destination === 'SanPablo') {
+  } else if (destination === 'San Pablo') {
     latitude2 = 14.0642;
     longitude2 = 121.3233;
   } else if (destination === 'Sariaya') {
@@ -57,7 +57,7 @@ function initLocations() {
   } else if (destination === 'Siain') {
     latitude2 = 13.9511;
     longitude2 = 122.0200;
-  } else if (destination === 'Sto.Tomas') {
+  } else if (destination === 'Sto. Tomas') {
     latitude2 = 14.0901;
     longitude2 = 121.1745;
   } else if (destination === 'Tiaong') {

@@ -24,7 +24,6 @@
   $numresults = $result->num_rows;
   $row = $result->fetch_assoc();
 
-
   $fname = $row['Fname'];
   $lname = $row['Lname'];
 
@@ -64,9 +63,9 @@
           <div class="container-fluid">
             <div class="col-sm-12"><label for="trip-from">From:&nbsp;</label><?php echo $_REQUEST['trip-from']?></div>
             <div class="col-sm-12"><label for="trip-to">Destination:&nbsp;</label><?php echo $_REQUEST['trip-to']?></div>
-            <input type="hidden" value=<?php echo $_REQUEST['trip-from']?> id="trip-from">
-            <input type="hidden" value=<?php echo $_REQUEST['trip-to']?> id="trip-to">
-            <input type="hidden" name="route" value=<?php echo $_REQUEST['trip-from']."to".$_REQUEST['trip-to'];?> id="route">
+            <input type="hidden" value="<?php echo $_REQUEST['trip-from']?>" id="trip-from">
+            <input type="hidden" value="<?php echo $_REQUEST['trip-to']?>" id="trip-to">
+            <input type="hidden" name="route" value="<?php echo $_REQUEST['trip-from']." to ".$_REQUEST['trip-to'];?>" id="route">
           </div>
           <div class="container-fluid">
             <div class="col-sm-12"><label for="departure-date">Date:&nbsp;</label><?php echo $_REQUEST['departure-date']?></div>

@@ -31,9 +31,10 @@ $(window).ready(function () {
 		var number = $('#'+value+'-phone').val();
 		var route = $('#'+value+'-route').val();
 		var deptime = $('#'+value+'-time').val();
-		var seatNum = $('#'+value+'-lname').val();
+		var seatNum = $('#'+value+'-seat').val();
 
-		genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum)
+		var pdf = genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum);
+		saveFileToServer(pdf, value);
 		console.log(fname);
 		console.log(lname);
 		console.log(busNumber);
@@ -51,8 +52,7 @@ $(window).ready(function () {
 		$('#reserve-number-length').val(0);
 		var inputs = $('.reserve-number-inputs');
 		var parent = inputs.parent();
-
-			inputs.remove();
+		inputs.remove();
 
 		console.log(confirmPendingList);
 	});
@@ -105,7 +105,7 @@ $(window).ready(function () {
 	$('#modal-yes-button').click(function (e) {
 		$('#mobile-number-input-after').attr('value', $('#mobile-number-input').val());
 		$('#smart-number-input-after').attr('value', $('#smart-number-input').val());
-		$('#about-input-after').attr('value', $('#about-input').text());
+		//$('#about-input-after').attr('value', $('#about-input').val());
 		$('#fb-link-input-after').attr('value', $('#fb-link-input').val());
 		$('#email-input-after').attr('value', $('#email-input').val());
 		for (var i = 0; i < confirmPendingList.length; i++) {
@@ -116,12 +116,12 @@ $(window).ready(function () {
 			$('#inputform').append(newInput);
 		}
 		$('#reserve-number-length').attr('value', confirmPendingList.length);
+		console.log(confirmPendingList);
 		$('#inputform').submit();
 	});
 });
 // Send PDF
 function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, seatNum) {
-
 	var initialMarginX = 10;
 	var initialMarginY = 10;
 	var x = 0;
@@ -130,33 +130,33 @@ function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, 
 	doc = new jsPDF({
 		orientation: 'portrait',
 		unit: 'px',
-		format: [470, 200]
+		format: [210, 200]
 	});
 	doc.setFontSize(20);
 	doc.text(10, 20, "P&O Transport Corp.");
 	doc.setFontSize(18);
 	doc.text(10, 40, "Official Receipt");
 	doc.setFontSize(15);
-	doc.text(30, 60, "Name: "+fname+" "+lname);
-	doc.text(30, 80, "Bus Number: "+busNumber);
-	doc.text(30, 100, "eMail: "+email);
-	doc.text(30, 120, "Number: " +number);
-	doc.text(30, 140, "Route: "+route);
-	doc.text(30, 160, "Reserved: "+seatNum);
-	doc.text(30, 180, "Receipt #" + resnum);
-	//doc.save(resnum+'-'+getDateToday());
-	var pdf =doc.output(); //returns raw body of resulting PDF returned as a string as per the plugin documentation.
-	var data = new FormData();
-	data.append("datum" , pdf);
-	var xhr = new XMLHttpRequest();
-	xhr.open( 'post', '../sample/php/upload.php', true ); //Post to php Script to save to server
-	xhr.send(data);
-	data = new FormData();
-	data.append("name" , resnum);
-	xhr = new XMLHttpRequest();
-	xhr.open( 'post', '../sample/php/upload.php', true ); //Post to php Script to save to server
-	xhr.send(data);
+	doc.text(20, 60, "Name: "+fname+" "+lname);
+	doc.text(20, 80, "Bus Number: "+busNumber);
+	doc.text(20, 100, "eMail: "+email);
+	doc.text(20, 120, "Number: " +number);
+	doc.text(20, 140, "Route: "+route);
+	doc.text(20, 160, "Reserved: "+seatNum);
+	doc.text(20, 180, "Receipt #: " + resnum);
+	return doc.output(); //returns raw body of resulting PDF returned as a string as per the plugin documentation.
+}
 
+function saveFileToServer(file, filename) {
+	var obj = {
+		output:file,
+		name:filename
+	};
+	$.ajax({
+		url:"php/upload.php",
+		type:"post",
+		data: {"file": JSON.stringify(obj)}
+	});
 }
 
 function getDateToday() {
