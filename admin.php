@@ -201,11 +201,11 @@
                 <div class=\"container-fluid form-group\">
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Driver:</label>
-                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Driver']."\" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Conductor:</label>
-                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Conductor']."\" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                 </div><br>";
               }
@@ -307,7 +307,7 @@
 
               <div class="form-group container-fluid">
                 <label>About Us</label>
-                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" name="about-input" form="inputform" disabled><?php echo $about;?></textarea>
+                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" name="about-input" disabled><?php echo $about;?></textarea>
                 <div class="col-sm-6">
                   <label>Facebook:</label>
                   <input type="text" id="fb-link-input" name="fbook" class="form-control front-page-settings-input" value=<?php echo $fb_link;?> disabled>
