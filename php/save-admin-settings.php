@@ -77,6 +77,7 @@
     $queryselect = "SELECT * FROM bus2";
     $resultselect = $db->query($queryselect);
     $numsultselect = $resultselect->num_rows;
+    echo $numsultselect;
     for ($i=0; $i < $numsultselect; $i++) {
       $row = $resultselect->fetch_assoc();
       $bus_driver = $_REQUEST['bus_driver'.$row['Bus_Code']];
@@ -86,7 +87,6 @@
     }
 
     $db->close();
-    echo $updatequery;
     # Then go back
     if ($updateresult1 && $updateresult2 && $updateresult3) {
       $_SESSION['admin_edit_success'] = 1;

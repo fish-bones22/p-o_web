@@ -101,8 +101,8 @@
             <div class="form-group">
               <label class="form-label">Bus type</label>
               <div class="custom-radio bus-type-radio">
-                <input type="radio" name="bus-type" value="aircon" required> Air-conditioned </input>
-                <input type="radio" name="bus-type" value="ordinary" required checked> Ordinary </input>
+                <input type="radio" name="bus-type" value="Aircon" required> Air-conditioned </input>
+                <input type="radio" name="bus-type" value="Ordinary" required checked> Ordinary </input>
               </div>
             </div>
             <!--selecting terminal-->
@@ -158,13 +158,16 @@
                     $querydepta = "SELECT * FROM `trip3` INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No` ORDER BY `Dept_A`";
                     $result = $db->query($querydepta);
                     $numresults = $result->num_rows;
+                    $cubao = "";
                     for ($i=0; $i < $numresults; $i++) {
                       $row = $result->fetch_assoc();
+                      if ($row['check_cubao'] === 'Yes')
+                        $cubao = "cubao";
                       if ($row != "") {
                         // Aircon
                         if ($row['Bus_Type'] == 'Aircon') {
                           // Kung galing Guinayangan
-                          echo "<option class=\"departure-time-option-guinayangan-a\" value=\"".$row['Dept_A']."\">".date("g:i a", strtotime($row['Dept_A']))."</option>";
+                          echo "<option class=\"departure-time-option-guinayangan-a ".$cubao."\" value=\"".$row['Dept_A']."\">".date("g:i a", strtotime($row['Dept_A']))."</option>";
                           // Kung galing Alabang
                           echo "<option class=\"departure-time-option-alabang-a\" value=\"".$row['Dept_B']."\">".date("g:i a", strtotime($row['Dept_B']))."</option>";
                         // Ordinary
@@ -175,6 +178,8 @@
                           echo "<option class=\"departure-time-option-alabang-b\" value=\"".$row['Dept_B']."\">".date("g:i a", strtotime($row['Dept_B']))."</option>";
                         }
                       }
+                      $previousValA = $row['Dept_A'];
+                      $previousValB = $row['Dept_B'];
                     }
                     $db->close();
                     ?>

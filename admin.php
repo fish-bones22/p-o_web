@@ -191,7 +191,7 @@
           <div class="panel-heading"><h4><strong>Trip settings</strong></h4></div>
           <div class="panel-body">
             <?php
-              $selectbusquery = "SELECT * FROM `bus2";
+              $selectbusquery = "SELECT * FROM `bus2`";
               $resquery = $db->query($selectbusquery);
               $numresult = $resquery->num_rows;
               for($i = 0; $i < $numresult; $i++) {
@@ -201,11 +201,11 @@
                 <div class=\"container-fluid form-group\">
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Driver:</label>
-                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Driver']."\" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Driver']." \" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Conductor:</label>
-                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Conductor']."\" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Conductor']." \" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
                   </div>
                 </div><br>";
               }

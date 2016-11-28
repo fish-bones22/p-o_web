@@ -128,6 +128,13 @@ $(window).ready(function () {
 		//$('#about-input-after').attr('value', $('#about-input').val());
 		$('#fb-link-input-after').attr('value', $('#fb-link-input').val());
 		$('#email-input-after').attr('value', $('#email-input').val());
+		for(var i = 0; i < $('#trip-input-length').val(); i++) {
+			var newInput = $(document.createElement('input'));
+			newInput.attr('name', "reserve-number-input-"+i);
+			newInput.attr('type', 'hidden');
+			newInput.attr('value', confirmPendingList[i]);
+			$('#inputform').append(newInput);
+		}
 		for (var i = 0; i < confirmPendingList.length; i++) {
 			var newInput = $(document.createElement('input'));
 			newInput.attr('name', "reserve-number-input-"+i);

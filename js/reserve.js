@@ -122,12 +122,13 @@ function buildSeatPlan() {
   var seatNum = 0;
   selected = [];
   // initialize special positionings
-  if ((totalSeats === 45) && (busType === 'ordinary'))
+  if ((totalSeats === 45) && (busType === 'Ordinary'))
     specialPositioning = ordinary45SpecialPositioning;
-  else if ((totalSeats === 55) && (busType === 'ordinary'))
+  else if ((totalSeats === 55) && (busType === 'Ordinary'))
     specialPositioning = ordinary55SpecialPositioning;
   else
     specialPositioning = [];
+
 
   // initialize seat plans
   if (totalSeats === 45) {
@@ -167,7 +168,7 @@ function buildSeatPlan() {
       // Change positioning of seats if bus type is 'ordinary'
       // before the middle door
       var specialSpacer = 0;
-      if (specialPositioning.indexOf(""+seatNum) >= 0)
+      if (specialPositioning.indexOf(seatNum) >= 0)
         specialSpacer = ((HEIGHT - seatHeight)-4) *i;
       else
         specialSpacer = 0;
@@ -205,6 +206,7 @@ function exportSeatPlan() {
 function updateSelect() {
   var busType = $('input:radio[name=bus-type]:checked').val();
   var tripFrom = $('#trip-from-select').val();
+  var tripTo = $('#trip-to-select').val();
   var firstElementTrip;
   var firstElementTime;
   $('.departure-time-option-guinayangan-a').addClass('hidden');
@@ -214,17 +216,23 @@ function updateSelect() {
   $('.trip-to-option-alabang').addClass('hidden');
   $('.trip-to-option-guinayangan').addClass('hidden');
   if (tripFrom === "Guinayangan") {
-    if (busType === "aircon") {
-      $('.departure-time-option-guinayangan-a').removeClass('hidden');
-      firstElementTime = $('.departure-time-option-guinayangan-a').eq(0);
+    if (busType === "Aircon") {
+      if (tripTo === "Cubao") {
+        $('.cubao').removeClass('hidden');
+        firstElementTime = $('.cubao').eq(0);
+      } else {
+        $('.departure-time-option-guinayangan-a').removeClass('hidden');
+        firstElementTime = $('.departure-time-option-guinayangan-a').eq(0);
+      }
     } else { // if bus is ordinary
       $('.departure-time-option-guinayangan-b').removeClass('hidden');
+      $("select > option[value='Cubao']").addClass('hidden');
       firstElementTime = $('.departure-time-option-guinayangan-b').eq(0);
     }
     $('.trip-to-option-guinayangan').removeClass('hidden');
     firstElementTrip = $('.trip-to-option-guinayangan').eq(0);
   } else {
-    if (busType === "aircon") {
+    if (busType === "Aircon") {
       $('.departure-time-option-alabang-a').removeClass('hidden');
       firstElementTime = $('.departure-time-option-alabang-a').eq(0);
     } else { // if bus is ordinary
@@ -236,11 +244,15 @@ function updateSelect() {
   }
   $("#departure-time-select").val(firstElementTime.val());
   $("#trip-to-select").val(firstElementTrip.val());
+  $("#departure-time-select option").each(function(){
+    $(this).siblings("[value='"+ this.value+"']").remove();
+  });
 }
 
 function updateBusSelect() {
   var depTime = $("#departure-time-select").val();
   var dest = $("#trip-from-select").val();
+  var busType = $('input:radio[name=bus-type]:checked').val();
   $('#bus-select').empty();
   busIndexArray = [];
   totalSeatsArray = [];
@@ -251,8 +263,10 @@ function updateBusSelect() {
   for (var i = 0; i < busArray.length; i++) {
     //console.log(depTime);
     //console.log(busArray[i][4]);
+    console.log(busType);
+    console.log(busArray[i][1]);
     if (dest === 'Guinayangan') {
-      if (depTime+'' == busArray[i][3]) { // index 3 for guinayangan
+      if ((depTime+'' == busArray[i][3]) && (busType === busArray[i][1])) { // index 3 for guinayangan
         //console.log("ok");
         $('#bus-select').append("<option value="+busArray[i][0]+">"+busArray[i][0]+"</option>")
         busIndexArray.push(i);
@@ -298,7 +312,7 @@ function updateMiscInfo() {
   //        (From_G, From_A, O_Price, A_Price);
   if (start === 'Guinayangan')  j = 0;
   else  j = 1;
-  if (busType === 'ordinary')  k = 2;
+  if (busType === 'Ordinary')  k = 2;
   else  k = 3;
   for (var i = 0; i < priceArray.length; i++) {
     if (dest === priceArray[i][j])
