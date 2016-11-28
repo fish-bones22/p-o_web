@@ -186,6 +186,44 @@
         </div>
       </div>
 
+      <div id="trip-settings" class="setting-container col-md-11">
+        <div class="panel panel-info">
+          <div class="panel-heading"><h4><strong>Trip settings</strong></h4></div>
+          <div class="panel-body">
+            <?php
+              $selectbusquery = "SELECT * FROM `bus2";
+              $resquery = $db->query($selectbusquery);
+              $numresult = $resquery->num_rows;
+              for($i = 0; $i < $numresult; $i++) {
+                $row = $resquery->fetch_assoc();
+                echo
+                "<div class=\"form-label\">Bus Number ".$row['Bus_No']."</div>
+                <div class=\"container-fluid form-group\">
+                  <div class=\"col-sm-6 form-btn2\">
+                    <label>Driver:</label>
+                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" disabled>
+                  </div>
+                  <div class=\"col-sm-6 form-btn2\">
+                    <label>Conductor:</label>
+                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"\" disabled>
+                  </div>
+                </div><br>";
+              }
+
+            ?>
+            <button type="button" class="btn btn-default btn-sm" id="edit-trip-settings-btn">
+              <span class="glyphicon glyphicon-edit"></span>Edit
+            </button>
+            <button type="button"
+                    class="btn btn-default btn-sm hidden" id="save-trip-settings-btn"
+                    data-toggle="modal"
+                    data-target="#modal-confirm">
+              <span class="glyphicon glyphicon-ok"></span>Save
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div id="payment-settings" class="setting-container col-md-11">
         <div class="panel panel-info">
           <div class="panel-heading"><h4><strong>Payment settings</strong></h4></div>

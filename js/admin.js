@@ -3,6 +3,7 @@ $(window).ready(function () {
 	// transaction table
 	var isEditingAbout = false;
 	var isEditingPayment = false;
+	var isEditingTrip = false;
 	var confirmPendingList = [];
 	var tempSmartVal = $('#smart-number-input').val();
 	var tempMobileVal =  $('#mobile-number-input').val();
@@ -78,6 +79,25 @@ $(window).ready(function () {
 			$('#email-input').val(tempEmailVal);
 		}
 		isEditingAbout = !isEditingAbout;
+	});
+	//trip
+	$('#edit-trip-settings-btn').click(function () {
+			// edit
+		if (!isEditingTrip) {
+			$('.trip-settings-input').removeAttr('disabled');
+			$('#edit-trip-settings-btn').html("<span class=\"glyphicon glyphicon-ok\"></span> Cancel");
+			$('#edit-trip-settings-btn span').removeClass('glyphicon glyphicon-edit');
+			$('#edit-trip-settings-btn span').addClass('glyphicon glyphicon-remove');
+			$("#save-trip-settings-btn").removeClass('hidden');
+			//cancel
+		} else {
+			$('.trip-settings-input').attr('disabled', '');
+			$('#edit-trip-settings-btn').html("<span class=\"glyphicon glyphicon-ok\"></span> Edit");
+			$('#edit-trip-settings-btn span').removeClass('glyphicon glyphicon-remove');
+			$('#edit-trip-settings-btn span').addClass('glyphicon glyphicon-edit');
+			$('#save-trip-settings-btn').addClass('hidden');
+		}
+		isEditingTrip = !isEditingTrip;
 	});
 	//payment
 	$('#edit-payment-settings-btn').click(function () {
