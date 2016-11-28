@@ -8,7 +8,7 @@
   }
   $smart_number = $_REQUEST['smart-number-input'];
   $mobile_number = $_REQUEST['mobile-number-input'];
-  $about = $_REQUEST['about-input'];
+  /*$about = $_REQUEST['about-input'];*/
   $fb_link = $_REQUEST['fb-link-input'];
   $email = $_REQUEST['email-input'];
 
@@ -51,8 +51,8 @@
 <?php
   $error_cause = "Incorrect Password";
   if ($row['password'] == $_POST['pwd-verification-input']) {
-    # Do SQL query HERE
-    $updatequery = "UPDATE info SET About='$about', smart_number='$smart_number', mobile_number='$mobile_number', fb_link='$fb_link', email='".$email."' where id='1'";
+    # Do SQL query HERE eto ay tinanggal muna About='$about',
+    $updatequery = "UPDATE info SET  smart_number='$smart_number', mobile_number='$mobile_number', fb_link='$fb_link', email='".$email."' where id='1'";
     $updateresult1 = $db->query($updatequery);
     $updateresult2 = 1;
     $updateresult3 = 1;

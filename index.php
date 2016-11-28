@@ -80,7 +80,7 @@ $numsult = $result->num_rows;
       <div class="col-lg-8 col-lg-offset-2">
         <h2>About P&amp;O</h2>
         <p>
-          <?php echo "".$row['About']."";?>
+          <?php echo "About the Company. Edit na lang to. Sa labas ang edit. Hindi sa admin page.";?>
         </p>
       </div>
     </div>

@@ -305,9 +305,9 @@
           <div class="panel-heading"><h4><strong>Front page settings</strong></h4></div>
           <div class="panel-body">
 
-              <div class="form-group container-fluid">
+              <!--<div class="form-group container-fluid">
                 <label>About Us</label>
-                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" name="about-input" disabled><?php echo $about;?></textarea>
+                <textarea class="form-control front-page-settings-input" rows="8" id="about-input" name="about-input" disabled><?php/* echo $about;*/?></textarea>-->
                 <div class="col-sm-6">
                   <label>Facebook:</label>
                   <input type="text" id="fb-link-input" name="fbook" class="form-control front-page-settings-input" value=<?php echo $fb_link;?> disabled>
