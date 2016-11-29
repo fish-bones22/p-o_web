@@ -38,14 +38,6 @@ $(window).ready(function () {
 
 		var pdf = genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
 		saveFileToServer(pdf, value);
-		console.log(fname);
-		console.log(lname);
-		console.log(busNumber);
-		console.log(email);
-		console.log(number);
-		console.log(route);
-		console.log(deptime);
-		console.log(seatNum);
 	});
 
 	$('#reserve-cancel-btn').click(function (e) {
@@ -56,8 +48,6 @@ $(window).ready(function () {
 		var inputs = $('.reserve-number-inputs');
 		var parent = inputs.parent();
 		inputs.remove();
-
-		console.log(confirmPendingList);
 	});
 
 	//about
@@ -137,8 +127,6 @@ $(window).ready(function () {
 			// For driver
 			var newInput = $(document.createElement('input'));
 			var inputBeforeValue = $('#driver-input-'+i).val();
-			console.log("busCode: "+busCode);
-			console.log("inputBeforeValue: "+inputBeforeValue);
 			newInput.attr('name', "driver-input-after-"+i);
 			newInput.attr('type', 'hidden');
 			newInput.attr('value', inputBeforeValue);
@@ -157,7 +145,6 @@ $(window).ready(function () {
 			newInput.attr('value', busCode);
 			$('#inputform').append(newInput);
 		}
-		console.log("conformPending: "+confirmPendingList);
 		$('#reserve-number-length').attr('value', confirmPendingList.length);
 		for (var i = 0; i < confirmPendingList.length; i++) {
 			// Generate hidden input for confirmation inside the modal

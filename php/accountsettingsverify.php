@@ -2,17 +2,16 @@
   session_start();
   include 'connect_to_db.php';
 
-  $email_new = $_POST['email'];
+  $email_new = $_REQUEST['email'];
   $email_old = $_SESSION['email'];
-  $password = $_POST['Password'];
-  $fname = $_POST['Fname'];
-  $lname = $_POST['Lname'];
-  $mobile = $_POST['Phone'];
-  $address = $_POST['Address'];
+  $password = $_REQUEST['Password'];
+  $fname = $_REQUEST['Fname'];
+  $lname = $_REQUEST['Lname'];
+  $mobile = $_REQUEST['Phone'];
+  $address = $_REQUEST['Address'];
 
   $query = "UPDATE user
-            SET Fname='$fname', Lname='$lname', email='$email_new', password='$password', phone='$mobile', Address='$address'
-            WHERE email='$email_old'";
+            SET Fname='".$fname."', Lname='".$lname."', email='".$email_new."', password='".$password."', phone='".$mobile."', Address='".$address."' WHERE email='".$email_old."';";
   echo $query;
   $result = $db->query($query);
   $db->close();

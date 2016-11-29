@@ -9,7 +9,7 @@
     if (isset($_REQUEST["lname"]))
       $lname=$_REQUEST["fname"];
 
-    $query = "SELECT * FROM user WHERE email LIKE '".$_SESSION['email']."'";
+    $query = "SELECT * FROM `user` WHERE `email` LIKE '".$_SESSION['email']."';";
 
     $result = $db->query($query);
     $numresults = $result->num_rows;
@@ -63,31 +63,31 @@
           ?>
           <div class="form-group">
             <label for="email">Email Address:</label>
-            <input type="email" class="form-control" id="email" name="email" autocomplete='off' placeholder="Enter Email" value=<?php echo $email;?> required disabled>
+            <input type="email" class="form-control" id="email" name="email" autocomplete='off' placeholder="Enter Email" value="<?php echo $email;?>" required disabled>
           </div>
           <div class="form-group">
             <label for="pwd">Password:</label>
-            <input type="password" class="form-control" name="Password" id="pwd" name='pass' placeholder="Enter Password" value=<?php echo $password;?> autocomplete required disabled>
+            <input type="password" class="form-control" name="Password" id="pwd" name='pass' placeholder="Enter Password" value="<?php echo $password;?>" autocomplete required disabled>
           </div>
           <div class="form-group">
             <label for="pwd">Retype Password:</label>
-            <input type="password" class="form-control" name="RePassword" id="repwd" name='repass' placeholder="Re-enter Password" value=<?php echo $password;?> autocomplete required disabled>
+            <input type="password" class="form-control" name="RePassword" id="repwd" name='repass' placeholder="Re-enter Password" value="<?php echo $password;?>" autocomplete required disabled>
           </div>
           <div class="form-group">
             <label for="fname" class="control-label">First Name:</label>
-            <input type="text" class="form-control" name="Fname" id="fname" autocomplete='off' value=<?php echo $fname;?> required disabled>
+            <input type="text" class="form-control" name="Fname" id="fname" autocomplete='off' value="<?php echo $fname;?>" required disabled>
           </div>
           <div class="form-group">
             <label for="lname">Last Name:</label>
-            <input type="text" class="lastname-form form-control" name="Lname" id="lname" autocomplete='off' value=<?php echo $lname;?> required disabled>
+            <input type="text" class="lastname-form form-control" name="Lname" id="lname" autocomplete='off' value="<?php echo $lname;?>" required disabled>
           </div>
           <div class="form-group">
             <label for="phone">Mobile number:</label>
-            <input type="text" id="phone" name="Phone" placeholder="09XX XXX XXXX" class="form-control bfh-phone" value=<?php echo $mobile;?> disabled>
+            <input type="text" id="phone" name="Phone" placeholder="09XX XXX XXXX" class="form-control bfh-phone" value="<?php echo $mobile;?>" disabled>
           </div>
           <div class="form-group">
             <label for="phone">Address:</label>
-            <input type="text" id="address" name="Address" class="form-control bfh-phone" value=<?php echo $address;?> disabled>
+            <input type="text" id="address" name="Address" class="form-control bfh-phone" value="<?php echo $address;?>" disabled>
           </div>
             <!--buttons edit and save-->
             <button type="button" class="btn btn-default btn-sm edit-btn">
