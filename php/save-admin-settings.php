@@ -1,6 +1,8 @@
 <?php
   session_start();
-  require_once("../vendor/phpmailer/PHPMailerAutoload.php");
+  require_once("../vendor/phpmailer/class.phpmailer.php");
+  $error = 0;
+  $error_message = "";
   $reserve_number = array();
   $length = intval($_REQUEST['reserve-number-length']);
   echo $length;
@@ -25,16 +27,18 @@
     copy("../temp/".$res_num.".pdf", "../transaction/receipt/".$res_num.".pdf");
 
     $email = new PHPMailer();
-    $email->From      = "P&O Transport Corporation";
+    $email->From      = "bot@potransportcorp.com";
     $email->FromName  = "P&O Web Admin";
     $email->Subject   = "Payment Confirmation";
-    $email->body      = "Your payment has been confirmed.\nOfficial receipt is attached in this email.";
-    $email->AddAddress= ($email_add);
+    $email->Body      = "Your payment has been confirmed.\nOfficial receipt is attached in this email.";
+    $email->AddAddress($email_add);
 
-    $file_to_attach = "../transaction/receipt/";
-    $email->AddAttachment($file_to_attach, $res_num.".pdf");
+    $file_to_attach = "../transaction/receipt/".$res_num.".pdf";
+    $email->AddAttachment($file_to_attach);
     unlink("../temp/".$res_num.".pdf");
-    return $email->Send();
+    $sent = $email->Send();
+    if (!$sent)  echo $email->ErrorInfo;
+    return;
   }
 ?>
 
@@ -50,7 +54,6 @@
 
   <body>
 <?php
-  $error_cause = "Incorrect Password";
   if ($row['password'] == $_POST['pwd-verification-input']) {
     # Do SQL query HERE eto ay tinanggal muna About='$about',
     $updatequery = "UPDATE info SET  smart_number='$smart_number', mobile_number='$mobile_number', fb_link='$fb_link', email='".$email."' where id='1'";
@@ -73,8 +76,7 @@
         $result = $db->query($getemailquery);
         $numresults = $result->num_rows;
         $row = $result->fetch_assoc();
-        echo $_REQUEST['reserve-number-'.$i];
-        emailReceipt($_REQUEST['reserve-number-'.$i], $row["email"]);
+        $email_sent = emailReceipt($_REQUEST['reserve-number-'.$i], $row["email"]);
       }
     }
     # Bus driver and conductor update
@@ -88,18 +90,19 @@
 
     $db->close();
     # Then go back
-    if ($updateresult1 && $updateresult2 && $updateresult3) {
+    if ($updateresult1 && $updateresult2 && $updateresult3 && !$error) {
       $_SESSION['admin_edit_success'] = 1;
       header("Location: ../admin.php");
       exit();
     } else {
-      $error_cause = "Backend problem";
+      $error_message = "Backend problem";
     }
   } else {
+    $error_message = "Incorrect Password";
     $_SESSION['admin_edit_success'] = 2; #
   }
 ?>
-    <div class="alert alert-danger" role="alert"><?php echo $error_cause?> ".
+    <div class="alert alert-danger" role="alert"><?php echo $error_message?>
       <a href="../admin.php">Go back</a>
     </div>
   </body>
