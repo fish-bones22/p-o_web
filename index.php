@@ -91,7 +91,10 @@ $numsult = $result->num_rows;
   <input type="hidden" id="error-signin-input" value='<?php echo $_SESSION['error_signin']; ?>'></input>
   <input type="hidden" id="error-signup-input" value='<?php echo $_SESSION['error_signup']; ?>'></input>
   <input type="hidden" id="is-signedin-input" value='<?php echo $is_signed_in; ?>'></input>
-
+  <?php
+    $_SESSION['error_signin'] = 0;
+    $_SESSION['error_signup'] = 0;
+   ?>
   <section id="gallery-carousel" class="content-section text-center">
     <div class="container">
       <div class="col-lg-8 col-lg-offset-2">

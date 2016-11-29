@@ -29,12 +29,7 @@ $(window).ready(function(){
   }
   // Check if signing up yields error
   if ($('#error-signup-input').val() === '1') {
-    if($('#is-signedin-input').val() !== '1') {
-      openLoginContainer();
-    } else {
-      $('#error-signup-input').attr('value','0');
-    }
-
+    openLoginContainer();
   }
   $('#reserve-btn-home').click(function (e) {
     if($('is-signedin-input').val() !== 1) {
@@ -44,7 +39,11 @@ $(window).ready(function(){
   });
 
   // Close Login/Signup form jQuery
-  $('.close, .logform-outside').click(closeLoginContainer);
+  $('.close-pop, .logform-outside').click(function (e) {
+    $("#error-signin-input").attr('value', 0);
+    $("#error-signup-input").attr('value', 0);
+    closeLoginContainer();
+  });
 
   // If login button is
   $('#login-btn').click(function (e) {

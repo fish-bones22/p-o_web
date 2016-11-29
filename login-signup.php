@@ -4,7 +4,7 @@
     <div class="logform-outside"></div>
     <div class="logform span6 offset3">
       <!-- Close button -->
-      <a class="close glyphicon glyphicon-remove"></a>
+      <a class="close-pop glyphicon glyphicon-remove"></a>
       <!-- Tabs: Login | Sign Up -->
       <ul class="tab-group">
       <li class="tab active"><a href="#login">Log In</a></li>
@@ -13,8 +13,9 @@
       <div class="tab-content">
         <!-- Sign in tab -->
         <?php
-        if ($_SESSION['error_signin'] == 1)
-          echo "<div class=\"alert alert-danger\">Login failed</div>";
+        if ($_SESSION['error_signin'] == 1) {
+          echo "<div class=\"alert alert-danger\">Login failed<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button></div>";
+        }
         ?>
         <div id="login">
           <h2>Log in</h2>
@@ -35,8 +36,9 @@
         <div id="signup">
         <!-- Sign up tab -->
           <?php
-          if ($_SESSION['error_signup'] == 1)
-            echo "<div class=\"alert alert-danger\">Registration failed</div>";
+          if ($_SESSION['error_signup'] == 1) {
+            echo "<div class=\"alert alert-danger\">Registration failed<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button></div>";
+          }
           ?>
           <h2>Sign up</h2>
           <form action="php/regverify.php" method="post" id="signupval">
