@@ -152,7 +152,9 @@
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-lname\" id=\"".$row1['Reserve_Code']."-lname\" value=\"".$row1['Lname']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-time\" id=\"".$row1['Reserve_Code']."-time\" value=\"".$row1['DeptTime']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-seat\" id=\"".$row1['Reserve_Code']."-seat\" value=\"".$row1['seatplan']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">";
+                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">
+                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-driver\" id=\"".$row1['Reserve_Code']."-driver\" value=\"".$row1['Bus_Driver']."\">
+                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-conductor\" id=\"".$row1['Reserve_Code']."-conductor\" value=\"".$row1['Bus_Conductor']."\">";
                       // Check if payment status is true or false
                     if ($row1['status']=='Yes') {
                       echo
@@ -191,25 +193,27 @@
           <div class="panel-heading"><h4><strong>Trip settings</strong></h4></div>
           <div class="panel-body">
             <?php
-              $selectbusquery = "SELECT * FROM `bus2`";
+              $selectbusquery = "SELECT * FROM bus2;";
               $resquery = $db->query($selectbusquery);
               $numresult = $resquery->num_rows;
+              $trip_input_length = $numresult;
+              if (!$resquery) echo "<div class=\"alert alert-danger\">Failed to fetch database</div>";
               for($i = 0; $i < $numresult; $i++) {
                 $row = $resquery->fetch_assoc();
                 echo
                 "<div class=\"form-label\">Bus Number ".$row['Bus_No']."</div>
                 <div class=\"container-fluid form-group\">
+                  <input type=\"hidden\" id=\"bus-code-input-".$i."\" value=\"".$row['Bus_Code']."\" >
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Driver:</label>
-                    <input type=\"text\" id=\"driver-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Driver']." \" name=\"bus_driver".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"driver-input-".$i."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Driver']."\" disabled>
                   </div>
                   <div class=\"col-sm-6 form-btn2\">
                     <label>Conductor:</label>
-                    <input type=\"text\" id=\"conductor-input".$row['Bus_Code']."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Conductor']." \" name=\"bus_conductor".$row['Bus_Code']."\" form=\"inputform\" disabled>
+                    <input type=\"text\" id=\"conductor-input-".$i."\" class=\"form-control trip-settings-input\" value=\"".$row['Bus_Conductor']."\"  disabled>
                   </div>
                 </div><br>";
               }
-
             ?>
             <button type="button" class="btn btn-default btn-sm" id="edit-trip-settings-btn">
               <span class="glyphicon glyphicon-edit"></span>Edit
@@ -347,22 +351,23 @@
             </div>
             <div class="modal-footer">
               <!--will receive a confirmation and the user will recieve a pdf to their email-->
-              <button type=button class="btn btn-default" id="modal-yes-button">Confirm</button>
-              <a class="btn btn-default" id="modal-no-button" data-dismiss="modal" aria-hidden="true" role="button">No</a>
               <div id="hidden-inputs">
                 <input type="hidden" name="reserve-number-length" id="reserve-number-length" value=0>
                 <input type="hidden" name="smart-number-input" id="smart-number-input-after" value="<?php echo $smart_number; ?>">
                 <input type="hidden" name="mobile-number-input" id="mobile-number-input-after" value="<?php echo $mobile_number; ?>">
                 <input type="hidden" name="fb-link-input" id="fb-link-input-after" value="<?php echo $fb_link; ?>">
                 <input type="hidden" name="email-input" id="email-input-after" value="<?php echo $email; ?>">
+                <input type="hidden" name="trip-input-length" id="trip-input-length" value="<?php echo $trip_input_length; ?>" >
               </div>
+              <button type=button class="btn btn-default" id="modal-yes-button">Confirm</button>
+              <a class="btn btn-default" id="modal-no-button" data-dismiss="modal" aria-hidden="true" role="button">No</a>
             </div>
           </form>
         </div>
       </div>
     </div>
 </body>
-      <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-      <script src="js/admin.js"></script>
-      <script src="vendor/jspdf/jspdf.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="vendor/jspdf/jspdf.min.js"></script>
 </html>

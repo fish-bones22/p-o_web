@@ -2,9 +2,10 @@
   session_start();
   require_once("../vendor/phpmailer/PHPMailerAutoload.php");
   $reserve_number = array();
-  $length = $_REQUEST['reserve-number-length'];
+  $length = intval($_REQUEST['reserve-number-length']);
+  echo $length;
   for ($i=0; $i < $length; $i++) {
-    $reserve_number[$i] = $_REQUEST['reserve-number-input-'.$i];
+    $reserve_number[$i] = $_REQUEST["reserve-number-".$i];
   }
   $smart_number = $_REQUEST['smart-number-input'];
   $mobile_number = $_REQUEST['mobile-number-input'];
@@ -56,6 +57,7 @@
     $updateresult1 = $db->query($updatequery);
     $updateresult2 = 1;
     $updateresult3 = 1;
+    # Reservation list confirmed
     $res_len = intval($_REQUEST['reserve-number-length']);
     if ($res_len > 0) {
       for ($i = 0; $i < $res_len; $i++) {
@@ -68,21 +70,19 @@
                         WHERE `Reserve_Code`='".$_REQUEST['reserve-number-'.$i]."';";
         $updateresult3 = $db->query($updatequery);
         $getemailquery = "SELECT `email` FROM `reserve` WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
-        $queryresult = $db->query($getemailquery);
+        $result = $db->query($getemailquery);
         $numresults = $result->num_rows;
         $row = $result->fetch_assoc();
+        echo $_REQUEST['reserve-number-'.$i];
         emailReceipt($_REQUEST['reserve-number-'.$i], $row["email"]);
       }
     }
-    $queryselect = "SELECT * FROM bus2";
-    $resultselect = $db->query($queryselect);
-    $numsultselect = $resultselect->num_rows;
-    echo $numsultselect;
-    for ($i=0; $i < $numsultselect; $i++) {
-      $row = $resultselect->fetch_assoc();
-      $bus_driver = $_REQUEST['bus_driver'.$row['Bus_Code']];
-      $bus_conductor = $_REQUEST['bus_conductor'.$row['Bus_Code']];
-      $updatequerybusdc = "UPDATE `bus2` SET `Bus_Driver`='$bus_driver', `Bus_Conductor`='$bus_conductor' WHERE `Bus_Code`=".$row['Bus_Code']."";
+    # Bus driver and conductor update
+    for ($i=0; $i < intval($_REQUEST['trip-input-length']); $i++) {
+      $bus_code = $_REQUEST["bus-code-after-".$i];
+      $bus_driver = $_REQUEST['driver-input-after-'.$i];
+      $bus_conductor = $_REQUEST['conductor-input-after-'.$i];
+      $updatequerybusdc = "UPDATE `bus2` SET `Bus_Driver`='$bus_driver', `Bus_Conductor`='$bus_conductor' WHERE `Bus_Code`=".$bus_code."";
       $resultquery = $db->query($updatequerybusdc);
     }
 

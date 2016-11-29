@@ -80,7 +80,8 @@ $numsult = $result->num_rows;
       <div class="col-lg-8 col-lg-offset-2">
         <h2>About P&amp;O</h2>
         <p>
-          <?php echo "About the Company. Edit na lang to. Sa labas ang edit. Hindi sa admin page.";?>
+        <?php echo
+        "P&amp;O Transport Corporation is devoted in giving our passengers a safe and happy trip. Our business is divided into two entity; first, P&amp;O Transportation which is a sole propiertorship named to Edwin D. Chito and another is P&amp;O Transport Corp. which is registered as a Corporation. We are previously known as Barney Auto Lines founded by Mr. Guillermo Chito and now devided and managed by his children which is now known as BALGCO (managed by Mr. Barney Chito, eldest son), P&amp;O Transport System(managed by Mr. Edwin D. Chito, 3rd son) and BAL Company(managed by the whole family)";?>
         </p>
       </div>
     </div>

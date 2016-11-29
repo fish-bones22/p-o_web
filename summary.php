@@ -103,6 +103,9 @@
           <label for="smart">Send to mobile number: <?php echo $row1['mobile_number'];?></label><br>
           <label for="smart">Driver: <?php echo $row2['Bus_Driver'];?></label><br>
           <label for="smart">Conductor: <?php echo $row2['Bus_Conductor'];?></label>
+          <p class="note">Send your payment through the Smart Padala Reference number.<br>
+                          Message (SMS) us your Smart Padala confirmation via the mobile number indicated.<br>
+                          Reservations not paid/confirmed within 24 hours will be forfeited.</p>
         </div>
 
         <input type="hidden" value="" id="smart">
@@ -124,11 +127,10 @@
           <!--button class="btn btn-export">Export</button-->
         </div>
       </div>
-      <div class="form-inline btn-container" data-html2canvas-ignore="true">
+      <div class="form-inline container-fluid col-sm-6 summary-btn-container" data-html2canvas-ignore="true">
         <a class="btn btn-default btn-blk" role="button" href="reserve.php">Back</a>
         <button type="submit" class="btn btn-default btn-blk" id="confirm-reservation-btn">Confirm</button>
       </div>
-
     </div>
   </form>
 

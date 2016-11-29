@@ -33,8 +33,10 @@ $(window).ready(function () {
 		var route = $('#'+value+'-route').val();
 		var deptime = $('#'+value+'-time').val();
 		var seatNum = $('#'+value+'-seat').val();
+		var driver = $('#'+value+'-driver').val();
+		var conductor = $('#'+value+'-conductor').val();
 
-		var pdf = genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum);
+		var pdf = genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
 		saveFileToServer(pdf, value);
 		console.log(fname);
 		console.log(lname);
@@ -123,32 +125,53 @@ $(window).ready(function () {
 
 	// modal
 	$('#modal-yes-button').click(function (e) {
+		e.preventDefault();
 		$('#mobile-number-input-after').attr('value', $('#mobile-number-input').val());
 		$('#smart-number-input-after').attr('value', $('#smart-number-input').val());
 		//$('#about-input-after').attr('value', $('#about-input').val());
 		$('#fb-link-input-after').attr('value', $('#fb-link-input').val());
 		$('#email-input-after').attr('value', $('#email-input').val());
 		for(var i = 0; i < $('#trip-input-length').val(); i++) {
+			// Generate hidden input for driver and conductor inside the modal
+			var busCode = $('#bus-code-input-'+i).val();
+			// For driver
 			var newInput = $(document.createElement('input'));
-			newInput.attr('name', "reserve-number-input-"+i);
+			var inputBeforeValue = $('#driver-input-'+i).val();
+			console.log("busCode: "+busCode);
+			console.log("inputBeforeValue: "+inputBeforeValue);
+			newInput.attr('name', "driver-input-after-"+i);
 			newInput.attr('type', 'hidden');
-			newInput.attr('value', confirmPendingList[i]);
+			newInput.attr('value', inputBeforeValue);
+			$('#inputform').append(newInput);
+			// For conductor
+			newInput = $(document.createElement('input'));
+			inputBeforeValue = $('#conductor-input-'+i).val();
+			newInput.attr('name', "conductor-input-after-"+i);
+			newInput.attr('type', 'hidden');
+			newInput.attr('value', inputBeforeValue);
+			$('#inputform').append(newInput);
+			// For buscode
+			newInput = $(document.createElement('input'));
+			newInput.attr('name', "bus-code-after-"+i);
+			newInput.attr('type', 'hidden');
+			newInput.attr('value', busCode);
 			$('#inputform').append(newInput);
 		}
-		for (var i = 0; i < confirmPendingList.length; i++) {
-			var newInput = $(document.createElement('input'));
-			newInput.attr('name', "reserve-number-input-"+i);
-			newInput.attr('type', 'hidden');
-			newInput.attr('value', confirmPendingList[i]);
-			$('#inputform').append(newInput);
-		}
+		console.log("conformPending: "+confirmPendingList);
 		$('#reserve-number-length').attr('value', confirmPendingList.length);
-		console.log(confirmPendingList);
+		for (var i = 0; i < confirmPendingList.length; i++) {
+			// Generate hidden input for confirmation inside the modal
+			var newInput = $(document.createElement('input'));
+			newInput.attr('name', "reserve-number-input-"+i);
+			newInput.attr('type', 'hidden');
+			newInput.attr('value', confirmPendingList[i]);
+			$('#inputform').append(newInput);
+		}
 		$('#inputform').submit();
 	});
 });
 // Send PDF
-function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, seatNum) {
+function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor) {
 	var initialMarginX = 10;
 	var initialMarginY = 10;
 	var x = 0;
@@ -157,7 +180,7 @@ function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, 
 	doc = new jsPDF({
 		orientation: 'portrait',
 		unit: 'px',
-		format: [210, 200]
+		format: [210, 240]
 	});
 	doc.setFontSize(20);
 	doc.text(10, 20, "P&O Transport Corp.");
@@ -169,8 +192,10 @@ function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, 
 	doc.text(20, 100, "eMail: "+email);
 	doc.text(20, 120, "Number: " +number);
 	doc.text(20, 140, "Route: "+route);
-	doc.text(20, 160, "Reserved: "+seatNum);
-	doc.text(20, 180, "Receipt #: " + resnum);
+	doc.text(20, 160, "Driver: "+driver);
+	doc.text(20, 180, "Cond: "+conductor);
+	doc.text(20, 200, "Reserved: "+seatNum);
+	doc.text(20, 220, "Receipt #: " + resnum);
 	return doc.output(); //returns raw body of resulting PDF returned as a string as per the plugin documentation.
 }
 
