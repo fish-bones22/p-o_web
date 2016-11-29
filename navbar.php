@@ -1,7 +1,7 @@
 <?php
   include 'php/connect_to_db.php';
 
-  $is_signed_in = false;
+  $is_signed_in = 0;
 
   // Get file name of the page the nav bar is currently on
   // to properly set-up links' names.
@@ -15,13 +15,13 @@
   }
 
   if(($_SESSION['uname'] == "") || (!isset($_SESSION['uname'])) ){
-    $is_signed_in = false;
+    $is_signed_in = 0;
     $hidden1 = 'hidden';
     $hidden2 = '';
     $_SESSION['admin'] = false;
   } else {
     $acc = $_SESSION['uname'];
-    $is_signed_in = true;
+    $is_signed_in = 1;
     $hidden1 = '';
     $hidden2 = 'hidden';
   }

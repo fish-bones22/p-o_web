@@ -16,7 +16,6 @@ var seatPlan55 = "sssasssssasssssasssssasssssasssssasssssasssssasssssasssssassss
 function initFunc() {
   setSeatPlanContainerSize();
   // Build the seatplan
-  updateInfos();
   updateSelect();
   updateBusSelect();
   updateMiscInfo();
@@ -46,6 +45,7 @@ function addSeatListener() {
       $(e.target).removeClass("selected"); // Remove div in 'selected' class
     }
     updateMiscInfo();
+    updateInfos();
   });
   // Enable popovers on reserved seats
   $('[data-toggle="popover"]').popover();
@@ -185,10 +185,11 @@ function buildSeatPlan() {
     }
     $('.seatplan').append(row);
   }
+  updateInfos();
 }
 
 function updateInfos() {
-  var totalSeats = $('.total-seats').val();
+  var totalSeats = parseInt(totalSeatsArray[busIndex]);
   $(".free-seats-info").text("Free seats: " + (totalSeats - reservedSeatsCount - selected.length));
   $(".reserved-seats-info").text("Reserved seats: " + reservedSeatsCount);
   $(".selected-seats-info").text("Selected seats: " + (selected.length));
@@ -263,8 +264,6 @@ function updateBusSelect() {
   for (var i = 0; i < busArray.length; i++) {
     //console.log(depTime);
     //console.log(busArray[i][4]);
-    console.log(busType);
-    console.log(busArray[i][1]);
     if (dest === 'Guinayangan') {
       if ((depTime+'' == busArray[i][3]) && (busType === busArray[i][1])) { // index 3 for guinayangan
         //console.log("ok");

@@ -22,7 +22,7 @@ $(window).ready(function(){
     });
   }
 
-  $('.login-navbar, #reserve-btn-navbar').click(openLoginContainer);
+  $('.login-navbar').click(openLoginContainer);
   // Check if signing in yields error
   if ($('#error-signin-input').val() === '1') {
     openLoginContainer();
@@ -31,17 +31,24 @@ $(window).ready(function(){
   if ($('#error-signup-input').val() === '1') {
     openLoginContainer();
   }
-  $('#reserve-btn-home').click(function (e) {
-    if($('is-signedin-input').val() !== 1) {
-      if ($('#reserve-btn').attr('href') != '#')
+  $('#reserve-btn-home, #reserve-btn-navbar').click(function (e) {
+    if($('#is-signedin-input').val() != 1) {
+      if ($('#reserve-btn-home').attr('href') == '#')
         openLoginContainer();
+    } else {
+      if ($("body").scrollTop() < 50) {
+        $("#reserve-btn-navbar").attr("href", "reserve.php");
+      } else {
+        $("#reserve-btn-navbar").attr("href", "#");
+      }
     }
   });
 
+
+
+
   // Close Login/Signup form jQuery
   $('.close-pop, .logform-outside').click(function (e) {
-    $("#error-signin-input").attr('value', 0);
-    $("#error-signup-input").attr('value', 0);
     closeLoginContainer();
   });
 

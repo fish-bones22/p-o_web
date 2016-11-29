@@ -9,6 +9,7 @@ $numsult = $result->num_rows;
   if ($numsult == 1) {
     $row = $result->fetch_assoc();
   }
+  $is_signed_in = false;
 ?>
 
 <!DOCTYPE html>
