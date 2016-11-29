@@ -8,7 +8,7 @@ $(window).ready(function() {
   });
 
   // jQuery for page scrolling feature - requires jQuery Easing plugin
-  $(function() {
+  /*$(function() {
     // get filename of the current page
     var path = window.location.pathname;
     var page = path.split("/").pop();
@@ -21,7 +21,7 @@ $(window).ready(function() {
         }, 1500, 'easeInOutExpo');
         event.preventDefault();
       });
-  });
+  });*/
 
   // Closes the Responsive Menu on Menu Item Click
   $('.navbar-collapse ul li a').click(function() {

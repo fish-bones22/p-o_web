@@ -6,7 +6,7 @@
   // Get file name of the page the nav bar is currently on
   // to properly set-up links' names.
   $pagefile = $_SERVER['REQUEST_URI'];
-  if ($pagefile == "/sample/index.php") {
+  if (strpos($pagefile, 'index.php')) {
     $link = '';
     $reserve_link = '#reserve';
   } else {
@@ -57,7 +57,7 @@
           <a href= <?php echo $link.'#page-top';?>></a>
         </li>
         <li class='<?php echo $hide_if_admin; ?>'>
-          <a class='page-scroll' href= <?php echo $reserve_link;?>>Reserve</a>
+          <a class='page-scroll' href= <?php echo $reserve_link;?> id="reserve-btn-navbar">Reserve</a>
         </li>
         <li class='<?php echo $hide_if_not_admin; ?>'>
           <a class='page-scroll' href='admin.php'>Admin</a>
@@ -72,7 +72,7 @@
           <a class='page-scroll' href=<?php echo $link.'#contact';?>>Contact</a>
         </li>
         <li class='<?php echo $hidden2; ?>'>
-          <a class='login-navbar' href=<?php echo $link.'#signin';?>>Sign in</a>
+          <a class='login-navbar' href=<?php echo $link.'#';?>>Sign in</a>
         </li>
         <li class='<?php echo $hidden1; ?>'>
           <a class='dropdown-toggle' data-trigger='hover' data-toggle="dropdown" href="#"><?php echo $acc;?>

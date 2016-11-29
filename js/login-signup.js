@@ -7,9 +7,6 @@ $(window).ready(function(){
     $('.logform-container').fadeIn(200);
     $('.logform').css("left", "10px");
     $('.logform').fadeIn(600);
-    $('body').css({
-      overflow: 'hidden'
-    });
     $('.logform-container').css({
       overflow: 'scroll'
     });
@@ -19,14 +16,13 @@ $(window).ready(function(){
     $('.logform').fadeOut(600);
     if (!$('.logform').is(":visible"))
       $('.logform').css("left", "-9000px");
-    $('body').css('overflow-y', 'scroll');
     $('.logform-container').fadeOut(200);
     window.setTimeout(250, function () {
       $('.logform-container').css("visibility", "hidden");
     });
   }
 
-  $('.login-navbar').click(openLoginContainer);
+  $('.login-navbar, #reserve-btn-navbar').click(openLoginContainer);
   // Check if signing in yields error
   if ($('#error-signin-input').val() === '1') {
     openLoginContainer();
@@ -40,9 +36,8 @@ $(window).ready(function(){
     }
 
   }
-
-  $('#reserve-btn').click(function (e) {
-    if($('is-signedin-input').val() !== '1') {
+  $('#reserve-btn-home').click(function (e) {
+    if($('is-signedin-input').val() !== 1) {
       if ($('#reserve-btn').attr('href') != '#')
         openLoginContainer();
     }
