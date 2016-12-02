@@ -474,17 +474,11 @@ footer p {
 }
 ::-moz-selection {
   text-shadow: none;
-  background: #fcfcfc;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(44, 44, 44, 0.2);
 }
 ::selection {
   text-shadow: none;
-  background: #fcfcfc;
-  background: rgba(255, 255, 255, 0.2);
-}
-img::selection {
-}
-img::-moz-selection {
+  background: rgba(44, 44, 44, 0.2);
 }
 body {
   webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);

@@ -48,7 +48,8 @@
           $row = $result->fetch_assoc();
           echo "\"".$row['Trip_Code']."\": {";
             echo "depTime: \"".$row['Dept_B']."\",";
-            echo "busNo: \"".$row['Bus_No']."\"";
+            echo "busNo: \"".$row['Bus_No']."\",";
+            echo  "totalSeats: \"".$row['Seats']."\"";
           echo "}";
           if ($i != $numresult-1)  echo", ";
         }
@@ -66,7 +67,8 @@
           $row = $result->fetch_assoc();
           echo "\"".$row['Trip_Code']."\": {";
             echo "depTime: \"".$row['Dept_A']."\",";
-            echo "busNo: \"".$row['Bus_No']."\"";
+            echo "busNo: \"".$row['Bus_No']."\",";
+            echo  "totalSeats: \"".$row['Seats']."\"";
           echo "}";
           if ($i != $numresult-1)  echo", ";
         }
@@ -85,8 +87,9 @@
         for ($i = 0; $i < $numresult; $i++) {
           $row = $result->fetch_assoc();
           echo "\"".$row['Trip_Code']."\": {";
-            echo "depTime: \"".$row['Dept_B']."\",";
-            echo "busNo: \"".$row['Bus_No']."\"";
+            echo  "depTime: \"".$row['Dept_B']."\",";
+            echo  "busNo: \"".$row['Bus_No']."\",";
+            echo  "totalSeats: \"".$row['Seats']."\"";
           echo "}";
           if ($i != $numresult-1)  echo", ";
         }
@@ -105,7 +108,7 @@
             echo "\"".$row['Trip_Code']."\": {";
             echo    "depTime: \"".$row['Dept_A']."\",";
             echo    "busNo: \"".$row['Bus_No']."\",";
-            echo    "totalSeats: \"".$row['Seats']."\",";
+            echo    "totalSeats: \"".$row['Seats']."\"";
             echo "}";
             if ($i != $numresult-1)  echo", ";
           }
@@ -131,7 +134,6 @@
       }
        ?>
     };
-   console.log(cubaoCustomSelectObj);
     <?php
     $query = "SELECT * FROM prices";
     $result = $db->query($query);
@@ -233,35 +235,6 @@
                 <div class="col-sm-6">
                   <label class="form-label">Departure time</label>
                   <select id="departure-time-select" class="form-control" name="departure-time">
-                  <?php
-                    $querydepta = "SELECT * FROM `trip3` INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No` ORDER BY `Dept_A`";
-                    $result = $db->query($querydepta);
-                    $numresults = $result->num_rows;
-                    $cubao = "";
-                    for ($i=0; $i < $numresults; $i++) {
-                      $row = $result->fetch_assoc();
-                      if ($row['check_cubao'] === 'Yes')
-                        $cubao = "cubao";
-                      if ($row != "") {
-                        // Aircon
-                        if ($row['Bus_Type'] == 'Aircon') {
-                          // Kung galing Guinayangan
-                          echo "<option class=\"departure-time-option-guinayangan-a ".$cubao."\" value=\"".$row['Dept_A']."\">".date("g:i a", strtotime($row['Dept_A']))."</option>";
-                          // Kung galing Alabang
-                          echo "<option class=\"departure-time-option-alabang-a\" value=\"".$row['Dept_B']."\">".date("g:i a", strtotime($row['Dept_B']))."</option>";
-                        // Ordinary
-                        } else {
-                          // Kung galing Guinayangan
-                          echo "<option class=\"departure-time-option-guinayangan-b\" value=\"".$row['Dept_A']."\">".date("g:i a", strtotime($row['Dept_A']))."</option>";
-                          // Kung galing Alabang
-                          echo "<option class=\"departure-time-option-alabang-b\" value=\"".$row['Dept_B']."\">".date("g:i a", strtotime($row['Dept_B']))."</option>";
-                        }
-                      }
-                      $previousValA = $row['Dept_A'];
-                      $previousValB = $row['Dept_B'];
-                    }
-                    $db->close();
-                    ?>
                   </select>
                 </div>
               </div>
@@ -274,7 +247,7 @@
 
               </select>
             </div>
-            <div class="container-fluid">
+            <div class="container-fluid hidden" id="price-container">
               <div class="col-sm-12"><label>Price:&nbsp;</label><p class="price-p"></p></div>
               <input type="hidden" name="price-input" id="price-input"></p>
             </div>
@@ -282,7 +255,7 @@
       </div>
 
       <div class="col-md-5">
-        <div><p>Select seat/s you prefer:</p></div>
+        <div class="form-inline"><p>Select seat/s you prefer:</p></div>
         <div class="alert alert-danger" id="empty-selection-alert" hidden>Please select a seat<span class="close">&times;</span></div>
         <div class="seatplan-container">
           <!-- Data needed in reserve.js -->
@@ -306,13 +279,14 @@
           </div>
           <!--button class="btn btn-export">Export</button-->
         </div>
+        <div id="reset">Reset</div>
       </div>
     </div>
     <div class="map-link">
       <label><a href="#" >Show map</a></label>
     </div>
 
-    <div class="reserve-btn-container">
+    <div class="reserve-btn-container hidden">
       <button type="submit" id="reserve-btn" name="reserve-button" class="btn btn-default btn-block btn-lg reserve-btn">Reserve now</button>
     </div>
   </form>
@@ -330,7 +304,7 @@
 
   <!-- MY API key! papalitan pa natin ito -->
   <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARW569S54S9o-8ueRlzJ5rRrg0gE26sWY&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPPL8NcnlOqGev_9zwxpgDoDBKs_PsfB0&callback=initMap"></script>
 
   <script src="js/map.js"></script>
 

@@ -1,9 +1,13 @@
+
 .summary-container {
   position: relative;
   margin: auto;
   max-width: 675px;
   min-width: 360px;
   top: 150px;
+}
+.summary-btn-container {
+  padding-bottom: 50px;
 }
 @media (max-width: 988px) {
   .summary-btn-container {

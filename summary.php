@@ -128,8 +128,8 @@
         </div>
       </div>
       <div class="form-inline container-fluid col-sm-6 summary-btn-container" data-html2canvas-ignore="true">
-        <a class="btn btn-default btn-blk" role="button" href="reserve.php">Back</a>
-        <button type="submit" class="btn btn-default btn-blk" id="confirm-reservation-btn">Confirm</button>
+        <a class="btn btn-default btn-blk summary-btn" role="button" href="reserve.php">Back</a>
+        <button type="submit" class="btn btn-default btn-blk summary-btn" id="confirm-reservation-btn">Reserve</button>
       </div>
     </div>
   </form>

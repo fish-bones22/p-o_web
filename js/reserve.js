@@ -4,12 +4,13 @@ var seatHeight = parseInt($('.seat').css('height'));
 var seatWidth = parseInt($('.seat').css('width'));
 var selected = [];
 var reservedSeatsCount = 0;
-var tripSelectOptions;
 var departureTime;
 var totalSeats = 55;
 var tripCode;
 var seatPlan45 = "ssassssassssassssassssassssassssassssassssassssasssssss";
 var seatPlan55 = "sssasssssasssssasssssasssssasssssasssssasssssasssssasssssasssssss";
+var currentBusDetails = {};
+var currentBusTripCode = {};
 
 function initFunc() {
   setSeatPlanContainerSize();
@@ -23,6 +24,15 @@ function initFunc() {
 function initVar() {
   selected = [];
   reservedSeatsCount = 0;
+  currentBusDetails = {};
+  currentBusTripCode = {};
+}
+
+function initAnimations() {
+  //easeIn($("#price-container"));
+  //easeIn($(".reserve-btn-container"));
+  easeOut($("#price-container"));
+  easeOut($(".reserve-btn-container"));
 }
 
 function addSeatListener() {
@@ -52,10 +62,18 @@ function initListeners() {
 
   addSeatListener();
 
-  $('.bus-type-radio').change(resetView);
-  // FOR DEBUG
-  $('input[name=bus-type], #trip-from-select').change(function (e) {
+  $('input[name=bus-type]').change(function (e) {
+    initVar();
     updateSelect();
+    updateBusSelect();
+    buildSeatPlan();
+    addSeatListener();
+    updateMiscInfo();
+  });
+  // FOR DEBUG
+  $('#trip-from-select').change(function (e) {
+    updateSelect();
+    updateBusSelect();
     buildSeatPlan();
     addSeatListener();
   });
@@ -64,9 +82,6 @@ function initListeners() {
     updateBusSelect();
     buildSeatPlan();
     addSeatListener();
-  });
-
-  $('#trip-to-select').change(function () {
     updateMiscInfo();
   });
 
@@ -79,6 +94,13 @@ function initListeners() {
   $('#bus-select').change(function (e) {
     buildSeatPlan();
     addSeatListener();
+  });
+
+  $('#reset').click(function(e) {
+    buildSeatPlan();
+    addSeatListener();
+    easeOut($("#price-container"));
+    easeOut($(".reserve-btn-container"));
   });
 
   $('#reserve-btn').click(function (e) {
@@ -109,11 +131,16 @@ function buildSeatPlan() {
   var seatDetails;
   var seatCol = 6;
   var busType = $('input:radio[name=bus-type]:checked').val();
+  var busNo = $('#bus-select').val();
   var reservedSeats = updateSeatPlan().split(",");
   var ordinary45SpecialPositioning = [7, 8, 11, 12, 15, 16, 19, 20, 23, 24];
   var ordinary55SpecialPositioning = [9, 10, 14, 15, 19, 20, 24, 25, 29, 30];
   var seatNum = 0;
+  reservedSeatsCount = 0;
   selected = [];
+  // Get total seats
+  totalSeats = parseInt(currentBusDetails[busNo]);
+  tripCode = currentBusTripCode[busNo];
   // initialize special positionings
   if ((totalSeats === 45) && (busType === 'Ordinary'))
     specialPositioning = ordinary45SpecialPositioning;
@@ -192,7 +219,6 @@ function exportSeatPlan() {
   for (var i = 0; i < selected.length; i++) {
     str += selected[i]+',';
   }
-  //console.log(str.substring(0, str.length - 1));
   return str.substring(0, str.length - 1);
 }
 
@@ -222,8 +248,8 @@ function updateSelect() {
   timeSelect.empty();
   var tripFromObj = mainObject[busType];
   var tripCodeObj = tripFromObj[from];
-  for (var tripCode in tripCodeObj) {
-    var time = tripCodeObj[tripCode]["depTime"];
+  for (var tc in tripCodeObj) {
+    var time = tripCodeObj[tc]["depTime"];
     timeSelect.append($("<option></option>")
                       .attr("value", time)
                       .text(convertToStandard(time)));
@@ -247,13 +273,15 @@ function checkDestSelect() {
     var busSelect = $('#bus-select');
     timeSelect.empty();
 
-    for (var tripCode in cubaoCustomSelectObj) {
-      var time = cubaoCustomSelectObj[tripCode]["depTime"];
+    for (var tc in cubaoCustomSelectObj) {
+      var time = cubaoCustomSelectObj[tc]["depTime"];
       timeSelect.append($("<option></option>")
                         .attr("value", time)
-                      .text(time));
+                      .text(convertToStandard(time)));
     }
 
+  } else {
+    updateSelect();
   }
 }
 
@@ -266,6 +294,8 @@ function updateBusSelect() {
   var tripFromObj;
   var tripCodeObj;
   busSelect.empty();
+  currentBusDetails = {};
+  currentBusTripCode = {};
   // Check if selected destination is custom
   if (dest === "Cubao") {
     tripCodeObj = cubaoCustomSelectObj;
@@ -273,13 +303,16 @@ function updateBusSelect() {
     tripFromObj = mainObject[busType];
     tripCodeObj = tripFromObj[from];
   }
-  for (var tripCode in tripCodeObj) {
-    var time = tripCodeObj[tripCode]["depTime"];
-    var bus = tripCodeObj[tripCode]["busNo"];
-    if (time === depTime)
+  for (var tc in tripCodeObj) {
+    var time = tripCodeObj[tc]["depTime"];
+    var bus = tripCodeObj[tc]["busNo"];
+    if (time === depTime) {
       busSelect.append($("<option></option>")
                         .attr("value", bus)
                         .text(bus));
+      currentBusDetails[bus] = tripCodeObj[tc]["totalSeats"];
+      currentBusTripCode[bus] = tc;
+    }
   }
 }
 
@@ -304,10 +337,8 @@ function updateSeatPlan() {
        (sp.date === date)) {
          seatplan += sp.seatplan + ",";
          tripCode = sp.tripCode;
-         totalSeats = parseInt(sp.totalSeats);
        }
   }
-  console.log(seatplan);
   seatplan = seatplan.substring(0, seatplan.length - 1);
   return seatplan;
 }
@@ -316,7 +347,7 @@ function updateMiscInfo() {
   var busType = $('input:radio[name=bus-type]:checked').val();
   var start = $("#trip-from-select").val();
   var dest = $("#trip-to-select").val();
-  var j, k, price;
+  var j, k, price = 0, priceEach;
   // index: [   0       1       2        3    ]
   //        (From_G, From_A, O_Price, A_Price);
   if (start === 'Guinayangan')  j = 0;
@@ -324,11 +355,33 @@ function updateMiscInfo() {
   if (busType === 'Ordinary')  k = 2;
   else  k = 3;
   for (var i = 0; i < priceArray.length; i++) {
-    if (dest === priceArray[i][j])
-      price = parseInt(priceArray[i][k])*selected.length;
+    if (dest === priceArray[i][j]) {
+      priceEach = parseInt(priceArray[i][k]);
+      price = priceEach*selected.length;
+    }
   }
-  $('#price-input').attr('value', price);
-  $('.price-p').text('P'+price);
+  // Empty selection guard
+  if (selected.length < 1) {
+    easeOut($(".reserve-btn-container"));
+  } else {
+    easeIn($(".reserve-btn-container"));
+  }
+  // Hide price if it has no value yet
+  if (price <= 0) {
+    easeOut($("#price-container"));
+  } else {
+    easeIn($("#price-container"));
+    // Grammar check
+    var st;
+    if (selected.length > 1) {
+      st = "seats";
+    } else {
+      st = "seat";
+    }
+    var text = selected.length+" "+st+" × P"+priceEach+" = P"+price
+    $('#price-input').attr('value', price);
+    $('.price-p').text(text);
+  }
 }
 
 function convertToStandard(militaryTime) {
@@ -355,10 +408,23 @@ function convertToStandard(militaryTime) {
   return standardTime+":"+minute+" "+period;
 }
 
+function easeIn(element) {
+  element.removeClass("hidden");
+  element.fadeIn(200);
+}
+
+function easeOut(element) {
+  element.fadeOut(200);
+  window.setTimeout(300, function (e) {
+    element.addClass("hidden");
+  });
+}
+
 function resetView() {
   initVar();
   initFunc();
   initListeners();
+  initAnimations();
 }
 
 $(window).ready(function () {

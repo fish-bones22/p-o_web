@@ -28,6 +28,6 @@ if ($result) {
   $_SESSION['reserve_success'] = 2;
   echo "failed";
 }
-header("Location: ../reserve.php");
-exit();
+//header("Location: ../reserve.php");
+//exit();
  ?>

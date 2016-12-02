@@ -17,7 +17,16 @@
   position: relative;
   margin: auto;
 }
-
+#reset {
+  position: relative;
+  cursor: pointer;
+  text-align: right;
+  padding-right: 50px;
+  top: 0;
+}
+#reset:hover {
+  color: #ababab;
+}
 .seatplan-container {
   background-color: rgb(239, 239, 239);
   border-radius: 10px;

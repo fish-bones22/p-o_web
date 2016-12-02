@@ -225,7 +225,7 @@ $numsult = $result->num_rows;
     <script src="js/script.js"></script>
     <script src="js/index.js"></script>
     <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARW569S54S9o-8ueRlzJ5rRrg0gE26sWY&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPPL8NcnlOqGev_9zwxpgDoDBKs_PsfB0&callback=initMap"></script>
 
 
   </body>
