@@ -59,6 +59,9 @@
         <li class='<?php echo $hide_if_admin; ?>'>
           <a class='page-scroll' href= <?php echo $reserve_link;?> id="reserve-btn-navbar">Reserve</a>
         </li>
+        <li class='<?php echo $hidden1." ".$hide_if_admin; ?>'>
+          <a class='page-scroll' href="booking-details.php">Bookings</a>
+        </li>
         <li class='<?php echo $hide_if_not_admin; ?>'>
           <a class='page-scroll' href='admin.php'>Admin</a>
         </li>

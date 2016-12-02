@@ -9,6 +9,7 @@
     exit();
   }
 
+  include 'php/clean-db.php';
   include 'php/connect_to_db.php';
   $querydisp = "SELECT * FROM info";
   $result = $db->query($querydisp);
@@ -132,7 +133,7 @@
                         <div class=\"name-label form-input\">".$row1['Fname']." ".$row1['Lname']."</div>
                       </td>
                       <td>
-                        <div class=\"transaction-number form-input\">".$row1['Reserve_Code']."</div>
+                        <div class=\"transaction-number form-input\">".$row1['reservation_num']."</div>
                       </td>
                       <td>
                         <div class=\"date-label form-input\">".$row1['rDate']."</div>
@@ -150,6 +151,7 @@
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-busno\" id=\"".$row1['Reserve_Code']."-busno\" value=\"".$row1['Bus_No']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-fname\" id=\"".$row1['Reserve_Code']."-fname\" value=\"".$row1['Fname']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-lname\" id=\"".$row1['Reserve_Code']."-lname\" value=\"".$row1['Lname']."\">
+                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-resnum\" id=\"".$row1['Reserve_Code']."-resnum\" value=\"".$row1['reservation_num']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-time\" id=\"".$row1['Reserve_Code']."-time\" value=\"".$row1['DeptTime']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-seat\" id=\"".$row1['Reserve_Code']."-seat\" value=\"".$row1['seatplan']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">
@@ -157,16 +159,23 @@
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-conductor\" id=\"".$row1['Reserve_Code']."-conductor\" value=\"".$row1['Bus_Conductor']."\">";
                       // Check if payment status is true or false
                     if ($row1['status']=='Yes') {
-                      echo
-                      "<td>
-                        <div class=\"mobile-label form-input\"><span class=\"glyphicon glyphicon-ok\"></span>Paid</div>
-                      </td>";
+                        echo
+                        "<td>
+                          <div class=\"mobile-label form-input\"><span class=\"glyphicon glyphicon-ok\"></span>&nbsp;Paid</div>
+                        </td>";
+
                     } else {
+                      if ($row1['cancel']=='No')
+                        echo
+                        "<td>
+                          <button type=\"button\" class=\"btn btn-blk btn-default confirm-payment-btn\">Confirm</button>
+                          <div class=\"pending-label hidden\">Pending</div>
+                        </td>";
+                      else
                       echo
-                      "<td>
-                        <button type=\"button\" class=\"btn btn-blk btn-default confirm-payment-btn\">Confirm</button>
-                        <div class=\"pending-label hidden\">Pending</div>
-                      </td>";
+                        "<td>
+                          <div class=\"mobile-label form-input\"><span class=\"glyphicon glyphicon-remove\"></span>&nbsp;Not settled</div>
+                        </td>";
                     }
                     echo
                     "</tr>";

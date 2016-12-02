@@ -99,6 +99,7 @@ function genPDF() {
   var busNumber = $('#bus-number').val();
   var totalSeats = $('#total-seats').val();
   var price = $('#price').val();
+  var reservation_num = $('#reservation_num').val();
   var img2, doc;
   var width = parseInt($('#screen-seatplan').css('width'));
   var height = parseInt($('.summary-container').css('height'));
@@ -125,10 +126,11 @@ function genPDF() {
   doc.text(30, 160, "Bus Details:");
   doc.text(35, 180, busNumber+", "+busType+", "+totalSeats+" seats");
   doc.text(30, 200, "Price: P"+price);
+  doc.text(30, 220, "Res Num: "+reservation_num);
   html2canvas($('#screen-seatplan'), {
     onrendered: function(canvas){
       img2 = canvas.toDataURL("image/jpg");
-      doc.addImage(img2,'JPEG', 10, 205);
+      doc.addImage(img2,'JPEG', 10, 235);
       doc.save('reservation-'+getDateToday());
     }
   });

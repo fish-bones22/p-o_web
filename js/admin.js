@@ -35,8 +35,8 @@ $(window).ready(function () {
 		var seatNum = $('#'+value+'-seat').val();
 		var driver = $('#'+value+'-driver').val();
 		var conductor = $('#'+value+'-conductor').val();
-
-		var pdf = genPDF(value, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
+		var newVal = $('#'+value+'-resnum').val();
+		var pdf = genPDF(value, newVal, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
 		saveFileToServer(pdf, value);
 	});
 
@@ -158,7 +158,7 @@ $(window).ready(function () {
 	});
 });
 // Send PDF
-function genPDF(resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor) {
+function genPDF(rescode, resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor) {
 	var initialMarginX = 10;
 	var initialMarginY = 10;
 	var x = 0;

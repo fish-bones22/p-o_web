@@ -1,0 +1,24 @@
+td {
+  word-wrap: break-word;
+}
+.booking-details-container {
+  padding-top: 150px;
+  max-width: 800px;
+  margin: auto;
+}
+.current-transactions-container {
+  max-width: 750px;
+  margin: auto;
+}
+.transactions-history-container {
+  max-width: 500px;
+  margin: auto;
+}
+.note {
+  color: #913c21;
+  font-size: 12px;
+  font-style: italic;
+}
+.popover {
+  max-width: 100%;
+}

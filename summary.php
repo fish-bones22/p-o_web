@@ -38,6 +38,10 @@
   $row2 = $result2->fetch_assoc();
 
   $db->close();
+
+  date_default_timezone_set('Asia/Manila');
+  $reservation_num = strtotime(date("Y-m-d h:i:sa"));
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,6 +69,7 @@
             <div class="col-sm-12"><label for="name">Name:&nbsp;</label><?php echo $fname.' '.$lname?></div>
             <input type="hidden" value=<?php echo $fname?> id="fname">
             <input type="hidden" value=<?php echo $lname?> id="lname">
+            <input type="hidden" value=<?php echo $reservation_num?> name="reservation_num" id="reservation_num">
           </div>
           <div class="container-fluid">
             <div class="col-sm-12"><label for="trip-from">From:&nbsp;</label><?php echo $_REQUEST['trip-from']?></div>

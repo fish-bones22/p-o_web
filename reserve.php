@@ -151,7 +151,8 @@
     <?php
       $query = "SELECT * FROM `reserve`
                 INNER JOIN `trip3` ON `trip3`.`Trip_Code`=`reserve`.`Trip_Code`
-                INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`";
+                INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                WHERE `cancel`='No'";
       $result = $db->query($query);
       $numresult = $result->num_rows;
     ?>

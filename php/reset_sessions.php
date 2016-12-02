@@ -7,4 +7,5 @@
   $_SESSION['update_success'] = 0;
   $_SESSION['error_signup'] = false;
   $_SESSION['reserve_success'] = 0;
+  $_SESSION['booking_cancel_success'] = 0;
  ?>

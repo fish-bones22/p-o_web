@@ -3,13 +3,15 @@ session_start();
 include 'php/init_sessions.php';
 include 'php/connect_to_db.php';
 
-$query = "SELECT * FROM info";
-$result = $db->query($query);
-$numsult = $result->num_rows;
-  if ($numsult == 1) {
-    $row = $result->fetch_assoc();
-  }
-  $is_signed_in = false;
+  $query = "SELECT * FROM info";
+  $result = $db->query($query);
+  $numsult = $result->num_rows;
+    if ($numsult == 1) {
+      $row = $result->fetch_assoc();
+    }
+    $is_signed_in = false;
+  $db->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +69,10 @@ $numsult = $result->num_rows;
             <div class="serif brand-heading">P&amp;O</div>
             <div class="intro-text">TRANSPORT CORPORATION</div>
             <div class="reserve-btn-container" >
-              <a type="button" id="reserve-btn-home" class="btn btn-default btn-lg" href=<?php echo $reserve_btn_link; ?>>Reserve now</a>
+              <a type="button" id="reserve-btn-home" class="btn btn-default btn-lg btn-home" href=<?php echo $reserve_btn_link; ?>>Reserve now</a>
+            </div>
+            <div class="booking-btn-container" >
+              <button type="button" id="booking-btn-home" class="btn btn-default btn-md btn-home <?php echo $hidden2 ?>" data-toggle="modal" data-target="#modal-search" href=#>Check Booking status</button>
             </div>
           </div>
         </div>
@@ -205,6 +210,29 @@ $numsult = $result->num_rows;
       </div>
     </section>
 
+    <!-- Reserve code modal -->
+    <div class="modal fade" id="modal-search" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header" align="center">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4>Enter reservation code to check booking status</h4>
+          </div>
+          <form id="inputform" action="search-booking.php" method="post">
+            <div class="modal-body form-group form-inline" align="center">
+              <label>Code: </label>
+              <input type="text" name="reserve-code-input" class="form-control" id="modal-search-input">
+            </div>
+            <div class="modal-footer">
+              <button type=submit class="btn btn-default" id="modal-yes-button">Search</button>
+              <a class="btn btn-default" id="modal-no-button" data-dismiss="modal" aria-hidden="true" role="button">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <footer>
       <div class="container text-center">
@@ -230,4 +258,4 @@ $numsult = $result->num_rows;
 
   </body>
 
-  </html>
+</html>

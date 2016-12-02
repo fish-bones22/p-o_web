@@ -177,6 +177,11 @@ a:focus {
 }
 .reserve-btn-container {
   padding: 20px;
+  padding-bottom: 10px;
+}
+.booking-btn-container {
+  padding: 20px;
+  padding-top: 10px;
 }
 #reserve-btn-home {
   border: 1px solid white;
@@ -189,6 +194,22 @@ a:focus {
   background-color: transparent;
 }
 #reserve-btn-home:hover {
+  border: 1px solid white;
+  outline: none;
+  color: black;
+  background-color: white;
+}
+#booking-btn-home {
+  border: 1px solid white;
+  color: white;
+  background-color: transparent;
+}
+#booking-btn-home:focus {
+  border: 1px solid gray;
+  color: black;
+  background-color: transparent;
+}
+#booking-btn-home:hover {
   border: 1px solid white;
   outline: none;
   color: black;
@@ -207,42 +228,6 @@ a:focus {
     font-size: 21px;
     line-height: 1;
   }
-}
-.btn-circle {
-  width: 70px;
-  height: 70px;
-  margin-top: 15px;
-  padding: 7px 16px;
-  border: 2px solid white;
-  border-radius: 100% !important;
-  font-size: 40px;
-  color: white;
-  background: transparent;
-  -webkit-transition: background 0.3s ease-in-out;
-  -moz-transition: background 0.3s ease-in-out;
-  transition: background 0.3s ease-in-out;
-}
-.btn-circle:hover,
-.btn-circle:focus {
-  outline: none;
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-}
-.btn-circle i.animated {
-  -webkit-transition-property: -webkit-transform;
-  -webkit-transition-duration: 1s;
-  -moz-transition-property: -moz-transform;
-  -moz-transition-duration: 1s;
-}
-.btn-circle:hover i.animated {
-  -webkit-animation-name: pulse;
-  -moz-animation-name: pulse;
-  -webkit-animation-duration: 1.5s;
-  -moz-animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-timing-function: linear;
 }
 @-webkit-keyframes pulse {
   0% {

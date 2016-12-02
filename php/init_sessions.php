@@ -14,5 +14,7 @@ if (!isset($_SESSION['update_success']))
 if (!isset($_SESSION['error_signup']))
   $_SESSION['error_signup'] = false;
 if(!isset($_SESSION['reserve_success']))
-   $_SESSION['reserve_success'] = 0;
+  $_SESSION['reserve_success'] = 0;
+if(!isset($_SESSION['booking_cancel_success']))
+  $_SESSION['booking_cancel_success'] = 0;
  ?>
