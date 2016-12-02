@@ -6,10 +6,8 @@ var selected = [];
 var reservedSeatsCount = 0;
 var tripSelectOptions;
 var departureTime;
-var busIndex = 0;
-var busIndexArray = [0];
-var totalSeatsArray = [];
-var tripCodeArray = [];
+var totalSeats = 55;
+var tripCode;
 var seatPlan45 = "ssassssassssassssassssassssassssassssassssassssasssssss";
 var seatPlan55 = "sssasssssasssssasssssasssssasssssasssssasssssasssssasssssasssssss";
 
@@ -36,7 +34,6 @@ function addSeatListener() {
     }
     var index = parseInt($(this).attr('value'));
     var i = selected.indexOf(index);
-    console.log(i);
     if (i === -1) {
       selected.push(index);
       $(e.target).addClass("selected"); // Include div in 'selected' class
@@ -59,13 +56,12 @@ function initListeners() {
   // FOR DEBUG
   $('input[name=bus-type], #trip-from-select').change(function (e) {
     updateSelect();
-    busIndex = $('#bus-select').prop('selectedIndex');
     buildSeatPlan();
     addSeatListener();
   });
   $('#trip-to-select').change(function (e) {
+    checkDestSelect();
     updateBusSelect();
-    busIndex = $('#bus-select').prop('selectedIndex');
     buildSeatPlan();
     addSeatListener();
   });
@@ -76,13 +72,11 @@ function initListeners() {
 
   $('#departure-time-select, .date-input').change(function (e) {
     updateBusSelect();
-    busIndex = $('#bus-select').prop('selectedIndex');
     buildSeatPlan();
     addSeatListener();
   });
 
   $('#bus-select').change(function (e) {
-    busIndex = $('#bus-select').prop('selectedIndex');
     buildSeatPlan();
     addSeatListener();
   });
@@ -90,8 +84,8 @@ function initListeners() {
   $('#reserve-btn').click(function (e) {
     var str = exportSeatPlan();
     $('.reserved-seats-after').attr('value', str);
-    $('.total-seats').attr('value', parseInt(totalSeatsArray[busIndex]));
-    $('.trip-code').attr('value', tripCodeArray[busIndex]);
+    $('.total-seats').attr('value', totalSeats);
+    $('.trip-code').attr('value', tripCode);
     if (selected.length === 0) {
       $('#empty-selection-alert').show();
       return false;
@@ -113,7 +107,6 @@ function setSeatPlanContainerSize() {
 function buildSeatPlan() {
   var specialPositioning;
   var seatDetails;
-  var totalSeats = parseInt(totalSeatsArray[busIndex]);
   var seatCol = 6;
   var busType = $('input:radio[name=bus-type]:checked').val();
   var reservedSeats = updateSeatPlan().split(",");
@@ -189,7 +182,6 @@ function buildSeatPlan() {
 }
 
 function updateInfos() {
-  var totalSeats = parseInt(totalSeatsArray[busIndex]);
   $(".free-seats-info").text("Free seats: " + (totalSeats - reservedSeatsCount - selected.length));
   $(".reserved-seats-info").text("Reserved seats: " + reservedSeatsCount);
   $(".selected-seats-info").text("Selected seats: " + (selected.length));
@@ -204,101 +196,119 @@ function exportSeatPlan() {
   return str.substring(0, str.length - 1);
 }
 
+
 function updateSelect() {
   var busType = $('input:radio[name=bus-type]:checked').val();
-  var tripFrom = $('#trip-from-select').val();
-  var tripTo = $('#trip-to-select').val();
-  var firstElementTrip;
-  var firstElementTime;
-  $('.departure-time-option-guinayangan-a').addClass('hidden');
-  $('.departure-time-option-guinayangan-b').addClass('hidden');
-  $('.departure-time-option-alabang-a').addClass('hidden');
-  $('.departure-time-option-alabang-b').addClass('hidden');
-  $('.trip-to-option-alabang').addClass('hidden');
-  $('.trip-to-option-guinayangan').addClass('hidden');
-  if (tripFrom === "Guinayangan") {
-    if (busType === "Aircon") {
-      if (tripTo === "Cubao") {
-        $('.cubao').removeClass('hidden');
-        firstElementTime = $('.cubao').eq(0);
-      } else {
-        $('.departure-time-option-guinayangan-a').removeClass('hidden');
-        firstElementTime = $('.departure-time-option-guinayangan-a').eq(0);
-      }
-    } else { // if bus is ordinary
-      $('.departure-time-option-guinayangan-b').removeClass('hidden');
-      $("select > option[value='Cubao']").addClass('hidden');
-      firstElementTime = $('.departure-time-option-guinayangan-b').eq(0);
-    }
-    $('.trip-to-option-guinayangan').removeClass('hidden');
-    firstElementTrip = $('.trip-to-option-guinayangan').eq(0);
-  } else {
-    if (busType === "Aircon") {
-      $('.departure-time-option-alabang-a').removeClass('hidden');
-      firstElementTime = $('.departure-time-option-alabang-a').eq(0);
-    } else { // if bus is ordinary
-      $('.departure-time-option-alabang-b').removeClass('hidden');
-      firstElementTime = $('.departure-time-option-alabang-b').eq(0);
-    }
-    $('.trip-to-option-alabang').removeClass('hidden');
-    firstElementTrip = $('.trip-to-option-alabang').eq(0);
+  var from = $("#trip-from-select").val();
+  var destinationSelect = $("#trip-to-select");
+  var timeSelect = $("#departure-time-select");
+  var index; // To be used in priceArray
+  if (from === "Alabang")
+    index = 1;
+  else
+    index = 0;
+  // Update destination select options
+  destinationSelect.empty();
+  for (var i = 0; i < priceArray.length; i++) {
+    // priceArray: [ From_G,   From_A,   O_Price,   A_price]
+    var option = new Option(priceArray[i][index], priceArray[i][index]);
+    // Filter out blank (null) entries
+    if (priceArray[i][index] != "")
+      // Filter Cubao trip
+      if ((priceArray[i][index] != "Cubao")||(busType != "Ordinary"))
+        destinationSelect.append(option);
   }
-  $("#departure-time-select").val(firstElementTime.val());
-  $("#trip-to-select").val(firstElementTrip.val());
-  $("#departure-time-select option").each(function(){
+  // Update time select options
+  timeSelect.empty();
+  var tripFromObj = mainObject[busType];
+  var tripCodeObj = tripFromObj[from];
+  for (var tripCode in tripCodeObj) {
+    var time = tripCodeObj[tripCode]["depTime"];
+    timeSelect.append($("<option></option>")
+                      .attr("value", time)
+                      .text(convertToStandard(time)));
+  }
+  // Remove duplicate options in time select
+  timeSelect.children().each(function() {
     $(this).siblings("[value='"+ this.value+"']").remove();
   });
+}
+/*
+ *
+ *
+*/
+function checkDestSelect() {
+  var dest = $("#trip-to-select").val();
+
+  if (dest === "Cubao") {
+    var depTime = $("#departure-time-select").val();
+    var timeSelect = $("#departure-time-select");
+    var from = $("#trip-from-select").val();
+    var busSelect = $('#bus-select');
+    timeSelect.empty();
+
+    for (var tripCode in cubaoCustomSelectObj) {
+      var time = cubaoCustomSelectObj[tripCode]["depTime"];
+      timeSelect.append($("<option></option>")
+                        .attr("value", time)
+                      .text(time));
+    }
+
+  }
 }
 
 function updateBusSelect() {
   var depTime = $("#departure-time-select").val();
-  var dest = $("#trip-from-select").val();
+  var dest = $("#trip-to-select").val();
   var busType = $('input:radio[name=bus-type]:checked').val();
-  $('#bus-select').empty();
-  busIndexArray = [];
-  totalSeatsArray = [];
-  tripCodeArray = [];
-  //console.log(busArray);
-  // index: [    0       1       2      3       4          5      ]
-  //        (Bus_No, Bus_Type, Seats, Dept_A, Dept_B, Trip_Code);
-  for (var i = 0; i < busArray.length; i++) {
-    //console.log(depTime);
-    //console.log(busArray[i][4]);
-    if (dest === 'Guinayangan') {
-      if ((depTime+'' == busArray[i][3]) && (busType === busArray[i][1])) { // index 3 for guinayangan
-        //console.log("ok");
-        $('#bus-select').append("<option value="+busArray[i][0]+">"+busArray[i][0]+"</option>")
-        busIndexArray.push(i);
-        totalSeatsArray.push(busArray[i][2]);
-        tripCodeArray.push(busArray[i][5]);
-      }
-    } else {
-      if (depTime+'' == busArray[i][4]) { // index 4 for alabang
-        //console.log("ok");
-        $('#bus-select').append("<option value="+busArray[i][0]+">"+busArray[i][0]+"</option>")
-        busIndexArray.push(i);
-        totalSeatsArray.push(busArray[i][2]);
-        tripCodeArray.push(busArray[i][5]);
-      }
-    }
+  var from = $("#trip-from-select").val();
+  var busSelect = $('#bus-select');
+  var tripFromObj;
+  var tripCodeObj;
+  busSelect.empty();
+  // Check if selected destination is custom
+  if (dest === "Cubao") {
+    tripCodeObj = cubaoCustomSelectObj;
+  } else {
+    tripFromObj = mainObject[busType];
+    tripCodeObj = tripFromObj[from];
+  }
+  for (var tripCode in tripCodeObj) {
+    var time = tripCodeObj[tripCode]["depTime"];
+    var bus = tripCodeObj[tripCode]["busNo"];
+    if (time === depTime)
+      busSelect.append($("<option></option>")
+                        .attr("value", bus)
+                        .text(bus));
   }
 }
 
 function updateSeatPlan() {
   var busNum = $('#bus-select').val();
-  var dateSelect = $('.date-input').val();
-  var timeSelect = $('#departure-time-select').val();
+  var date = $('.date-input').val();
+  var time = $('#departure-time-select').val();
   var seatplan = '';
-  // index: [    0     1       2       3        4     ]
-  //        (Bus_No, date, DeptTime, status, seatplan);
-  for (var i = 0; i < seatPlanArray.length; i++) {
-    if ((seatPlanArray[i][0] === busNum) &&
-        (seatPlanArray[i][1] === dateSelect) &&
-        (seatPlanArray[i][2] === timeSelect)) {
-          seatplan += seatPlanArray[i][4]+",";
-        }
+  /*  Structure of seatPlanObj
+   *
+   * seatPlan = [{
+   *   busNo:
+   *   depTime:
+   *   rDate:
+   *   seatPlan:
+   * }]
+   *
+  **/
+  for (var i = 0; i < seatPlanArr.length; i++) {
+    var sp = seatPlanArr[i];
+    if((sp.busNo === busNum) && (sp.depTime === time) &&
+       (sp.date === date)) {
+         seatplan += sp.seatplan + ",";
+         tripCode = sp.tripCode;
+         totalSeats = parseInt(sp.totalSeats);
+       }
   }
-  seatplan=seatplan.substring(0, seatplan.length - 1);
+  console.log(seatplan);
+  seatplan = seatplan.substring(0, seatplan.length - 1);
   return seatplan;
 }
 
@@ -319,6 +329,30 @@ function updateMiscInfo() {
   }
   $('#price-input').attr('value', price);
   $('.price-p').text('P'+price);
+}
+
+function convertToStandard(militaryTime) {
+  var timeArr = militaryTime.split(":");
+  var standardTime = "";
+  var hour = parseInt(timeArr[0]);
+  var minute = parseInt(timeArr[1]);
+  var period;
+  if (hour > 12)
+    standardTime = (hour-12);
+  else
+    standardTime = (hour);
+  if (hour >= 12)
+    period = "pm";
+  else
+    period = "am";
+  if (hour === 0) {
+    standardTime = "12";
+    period = "am";
+  }
+  if (minute === 0)
+    minute = "00";
+
+  return standardTime+":"+minute+" "+period;
 }
 
 function resetView() {

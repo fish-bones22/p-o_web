@@ -22,9 +22,6 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
   <title>Reserve</title>
 
   <!-- Bootstrap Core CSS -->
@@ -35,44 +32,147 @@
   <link href="css/reserve.css" rel="stylesheet">
   <script src="vendor/jquery/jquery.min.js"></script>
   <script>
-    // Instead na PHP array ay JS array
-    var busArray = [
-      <?php
-        $querydata = "SELECT * FROM `trip3` INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`";
-        $rest = $db->query($querydata);
-        $numresult1 = $rest->num_rows;
+    // Fetch from database and convert to JSON
+    // With specific structure.
 
-        for ($i=0; $i < $numresult1; $i++) {
-          $row1 = $rest->fetch_assoc();
-          echo "['".$row1['Bus_No']."','".$row1['Bus_Type']."','".$row1['Seats']."','".$row1['Dept_A']."','".$row1['Dept_B']."','".$row1['Trip_Code']."'],";
+    var airconObj = {
+      Alabang: {
+      <?php
+        $query = "SELECT * FROM `trip3`
+                  INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                  WHERE `Bus_Type`='Aircon'
+                  ORDER BY `Dept_B`;";
+        $result = $db->query($query);
+        $numresult = $result->num_rows;
+        for ($i = 0; $i < $numresult; $i++) {
+          $row = $result->fetch_assoc();
+          echo "\"".$row['Trip_Code']."\": {";
+            echo "depTime: \"".$row['Dept_B']."\",";
+            echo "busNo: \"".$row['Bus_No']."\"";
+          echo "}";
+          if ($i != $numresult-1)  echo", ";
         }
        ?>
-    ];
+      },
+      Guinayangan: {
+      <?php
+        $query = "SELECT * FROM `trip3`
+                  INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                  WHERE `Bus_Type`='Aircon'
+                  ORDER BY `Dept_A`;";
+        $result = $db->query($query);
+        $numresult = $result->num_rows;
+        for ($i = 0; $i < $numresult; $i++) {
+          $row = $result->fetch_assoc();
+          echo "\"".$row['Trip_Code']."\": {";
+            echo "depTime: \"".$row['Dept_A']."\",";
+            echo "busNo: \"".$row['Bus_No']."\"";
+          echo "}";
+          if ($i != $numresult-1)  echo", ";
+        }
+       ?>
+      }
+    };
+    var ordinaryObj = {
+      Alabang: {
+      <?php
+        $query = "SELECT * FROM `trip3`
+                  INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                  WHERE `Bus_Type`='Ordinary'
+                  ORDER BY `Dept_B`;";
+        $result = $db->query($query);
+        $numresult = $result->num_rows;
+        for ($i = 0; $i < $numresult; $i++) {
+          $row = $result->fetch_assoc();
+          echo "\"".$row['Trip_Code']."\": {";
+            echo "depTime: \"".$row['Dept_B']."\",";
+            echo "busNo: \"".$row['Bus_No']."\"";
+          echo "}";
+          if ($i != $numresult-1)  echo", ";
+        }
+       ?>
+      },
+      Guinayangan: {
+        <?php
+          $query = "SELECT * FROM `trip3`
+                    INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                    WHERE `Bus_Type`='Ordinary'
+                    ORDER BY `Dept_A`;";
+          $result = $db->query($query);
+          $numresult = $result->num_rows;
+          for ($i = 0; $i < $numresult; $i++) {
+            $row = $result->fetch_assoc();
+            echo "\"".$row['Trip_Code']."\": {";
+            echo    "depTime: \"".$row['Dept_A']."\",";
+            echo    "busNo: \"".$row['Bus_No']."\",";
+            echo    "totalSeats: \"".$row['Seats']."\",";
+            echo "}";
+            if ($i != $numresult-1)  echo", ";
+          }
+         ?>
+      }
+    };
+    var cubaoCustomSelectObj = {
+      <?php
+      $query = "SELECT * FROM `trip3`
+                INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`
+                WHERE `check_cubao`='Yes'
+                ORDER BY `Dept_A`;";
+      $result = $db->query($query);
+      $numresult = $result->num_rows;
+      for ($i = 0; $i < $numresult; $i++) {
+        $row = $result->fetch_assoc();
+        echo "\"".$row['Trip_Code']."\": {";
+        echo    "depTime: \"".$row['Dept_A']."\",";
+        echo    "busNo: \"".$row['Bus_No']."\",";
+        echo    "totalSeats: \"".$row['Seats']."\",";
+        echo "}";
+        if ($i != $numresult-1)  echo", ";
+      }
+       ?>
+    };
+   console.log(cubaoCustomSelectObj);
+    <?php
+    $query = "SELECT * FROM prices";
+    $result = $db->query($query);
+    $numresult = $result->num_rows;
+    ?>
     var priceArray = [
       <?php
-        $query = "SELECT * FROM prices";
-        $result = $db->query($query);
-        $numresult = $result->num_rows;
-
-        for ($i=0; $i < $numresult; $i++) {
-          $row = $result->fetch_assoc();
-          echo "['".$row['From_G']."','".$row['From_A']."','".$row['O_Price']."','".$row['A_Price']."'],";
-        }
-       ?>
+      for ($i=0; $i < $numresult; $i++) {
+        $row = $result->fetch_assoc();
+        echo "['".$row['From_G']."','".$row['From_A']."','".$row['O_Price']."','".$row['A_Price']."']";
+        if ($i != $numresult-1)  echo", ";
+      }
+      ?>
     ];
-    var seatPlanArray = [
+    <?php
+      $query = "SELECT * FROM `reserve`
+                INNER JOIN `trip3` ON `trip3`.`Trip_Code`=`reserve`.`Trip_Code`
+                INNER JOIN `bus2` ON `trip3`.`Bus_No`=`bus2`.`Bus_No`";
+      $result = $db->query($query);
+      $numresult = $result->num_rows;
+    ?>
+    var seatPlanArr = [
       <?php
-        $query = "SELECT * FROM reserve";
-        $result = $db->query($query);
-        $numresult = $result->num_rows;
-
         for ($i=0; $i < $numresult; $i++) {
           $row = $result->fetch_assoc();
-          echo "['".$row['Bus_No']."','".$row['rDate']."','".$row['DeptTime']."','".$row['status']."','".$row['seatplan']."'],";
+          echo "{";
+          echo  "busNo: \"".$row['Bus_No']."\",";
+          echo  "depTime: \"".$row['DeptTime']."\",";
+          echo  "date: \"".$row['rDate']."\",";
+          echo  "seatplan: \"".$row['seatplan']."\",";
+          echo  "totalSeats: \"".$row['Seats']."\",";
+          echo  "tripCode: \"".$row['Trip_Code']."\"";
+          echo "}";
+          if ($i != $numresult-1)  echo", ";
         }
       ?>
     ];
-
+    var mainObject = {
+      Aircon: airconObj,
+      Ordinary: ordinaryObj
+    };
   </script>
 </head>
 <body>
@@ -118,23 +218,6 @@
                   <div class="form-group">
                     <label class="form-label">To</label>
                     <select id="trip-to-select" class="form-control" name="trip-to">
-                    <?php
-                      $querygtrip = "SELECT * FROM `prices`";
-                      $result = $db->query($querygtrip);
-                      $numresults = $result->num_rows;
-                      for ($i=0; $i < $numresults; $i++) {
-                        $row = $result->fetch_assoc();
-                          if ($row != "") {
-                            // ETO KAPAG GALING ALABANG
-                            // Sam: Pinagsama ko ng select tapos yung
-                            // option nalang ang mahihide depende sa nakaselect sa taas
-                            echo "<option class=\"trip-to-option-guinayangan\" value=\"".$row['From_G']."\">".$row['From_G']."</option>";
-                            //DITO NAMAN KAPAG GALING ALABANG
-                            //MAY BLANKONG ISA DITO KASI MAY KALINYA PANG NULL YUNG SA CUBAO
-                            echo "<option class=\"trip-to-option-alabang\" value=\"".$row['From_A']."\">".$row['From_A']."</option>";
-                          }
-                      }
-                    ?>
                     </select>
                   </div>
                 </div>
