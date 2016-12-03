@@ -13,15 +13,16 @@ $(window).ready(function () {
 
 	$('.confirm-payment-btn').click(function (e) {
 		var value = $(this).parent().parent().attr('id');
+		var newVal = $('#'+value+'-resnum').val();
 		$(this).siblings().removeClass('hidden');
 		$(this).addClass('hidden');
-		confirmPendingList.push(value);
+		confirmPendingList.push(newVal);
 		$('#reserve-number-length').val(confirmPendingList.length);
 		var newInput = $(document.createElement('input'));
 		newInput.attr('type', 'hidden');
 		newInput.attr('name', 'reserve-number-'+(confirmPendingList.length-1));
 		newInput.attr('class', 'reserve-number-inputs');
-		newInput.attr('value', value);
+		newInput.attr('value', newVal);
 		$('#hidden-inputs').append(newInput);
 
 		var receipt;
@@ -35,9 +36,8 @@ $(window).ready(function () {
 		var seatNum = $('#'+value+'-seat').val();
 		var driver = $('#'+value+'-driver').val();
 		var conductor = $('#'+value+'-conductor').val();
-		var newVal = $('#'+value+'-resnum').val();
 		var pdf = genPDF(value, newVal, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
-		saveFileToServer(pdf, value);
+		saveFileToServer(pdf, newVal);
 	});
 
 	$('#reserve-cancel-btn').click(function (e) {

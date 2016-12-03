@@ -77,7 +77,7 @@ function initListeners() {
     buildSeatPlan();
     addSeatListener();
   });
-  $('#trip-to-select').change(function (e) {
+  $('#trip-to-select').click(function (e) {
     checkDestSelect();
     updateBusSelect();
     buildSeatPlan();
@@ -280,8 +280,6 @@ function checkDestSelect() {
                       .text(convertToStandard(time)));
     }
 
-  } else {
-    updateSelect();
   }
 }
 

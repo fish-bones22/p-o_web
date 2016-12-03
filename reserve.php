@@ -221,6 +221,7 @@
                   <div class="form-group">
                     <label class="form-label">To</label>
                     <select id="trip-to-select" class="form-control" name="trip-to">
+                      <option value=""></option>
                     </select>
                   </div>
                 </div>

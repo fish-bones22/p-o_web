@@ -13,7 +13,7 @@ function buildSeatPlan() {
   var seatDetails;
   var totalSeats = parseInt($('#total-seats').val());
   var seatCol = 6;
-  var busType = $('input:radio[name=bus-type]:checked').val();
+  var busType = $('#bus-type').val();
   var reservedSeats = [];
   if ($('#reserved-seats').val() !== undefined)
     reservedSeats = $('#reserved-seats').val().split(",");
@@ -22,9 +22,9 @@ function buildSeatPlan() {
   var seatNum = 0;
 
   // initialize special positionings
-  if ((totalSeats === 45) && (busType === 'ordinary'))
+  if ((totalSeats === 45) && (busType === 'Ordinary'))
     specialPositioning = ordinary45SpecialPositioning;
-  else if ((totalSeats === 55) && (busType === 'ordinary'))
+  else if ((totalSeats === 55) && (busType === 'Ordinary'))
     specialPositioning = ordinary55SpecialPositioning;
   else
     specialPositioning = [];

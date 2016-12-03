@@ -65,14 +65,14 @@
     if ($res_len > 0) {
       for ($i = 0; $i < $res_len; $i++) {
         // Set status to paid
-        $updatequery = "UPDATE `reserve` SET `status`='Yes' WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
+        $updatequery = "UPDATE `reserve` SET `status`='Yes' WHERE `reservation_num`=".$_REQUEST['reserve-number-'.$i].";";
         $updateresult2 = $db->query($updatequery);
         // Get info from reserve table and copy to transaction table
-        $updatequery = "INSERT INTO `transaction` (`Bus_No`, `email`,`rdate`, tPrice, `Reserve_Code`, `tdate`)
-                        SELECT `Bus_No`, `email`,`rDate`, tPrice, `Reserve_Code`, `tDate` FROM `reserve`
-                        WHERE `Reserve_Code`='".$_REQUEST['reserve-number-'.$i]."';";
+        $updatequery = "INSERT INTO `transaction` (`Bus_No`, `email`,`rdate`, tPrice, `Reserve_Code`, `reservation_num`, `tdate`)
+                        SELECT `Bus_No`, `email`,`rDate`, tPrice, `Reserve_Code`, `reservation_num`, `tDate` FROM `reserve`
+                        WHERE `reservation_num`='".$_REQUEST['reserve-number-'.$i]."';";
         $updateresult3 = $db->query($updatequery);
-        $getemailquery = "SELECT `email` FROM `reserve` WHERE `Reserve_Code`=".$_REQUEST['reserve-number-'.$i].";";
+        $getemailquery = "SELECT `email` FROM `reserve` WHERE `reservation_num`=".$_REQUEST['reserve-number-'.$i].";";
         $result = $db->query($getemailquery);
         $numresults = $result->num_rows;
         $row = $result->fetch_assoc();
