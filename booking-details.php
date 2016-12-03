@@ -128,6 +128,7 @@
             <thead>
               <tr>
                 <th>Transaction Number</th>
+                <th>Reservation number</th>
                 <th>Date</th>
                 <th>Price</th>
               </tr>
@@ -142,6 +143,7 @@
                   echo
                   "<tr>
                     <td>".$row['Transaction_Code']."</td>
+                    <td>".$row['reservation_num']."</td>
                     <td>".$row['rdate']."</td>
                     <td>".$row['tPrice']."</td>
                   </tr>";

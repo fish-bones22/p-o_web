@@ -57,7 +57,7 @@
   if ($row['password'] == $_POST['pwd-verification-input']) {
     # Do SQL query HERE eto ay tinanggal muna About='$about',
     $updatequery = "UPDATE info SET  smart_number='$smart_number', mobile_number='$mobile_number', fb_link='$fb_link', email='".$email."' where id='1'";
-    $updateresult1 = $db->query($updatequery);
+    $updateresult1 = $db->query($updatequery); 
     $updateresult2 = 1;
     $updateresult3 = 1;
     # Reservation list confirmed
