@@ -15,7 +15,7 @@
     $numresults = $result->num_rows;
     $row = $result->fetch_assoc();
     $db->close();
-
+    # Get table values
     $email = $_SESSION['email'];
     $password = $row['password'];
     $fname = $row['Fname'];
