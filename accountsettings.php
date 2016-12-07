@@ -22,7 +22,7 @@
     $lname = $row['Lname'];
     $mobile = $row['phone'];
     $address = $row['Address'];
-    # Get result
+    # Display notification
     if (!isset($_SESSION['update_success'])) {
       $_SESSION['update_success'] = 0;
     }
