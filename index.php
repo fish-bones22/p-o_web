@@ -71,11 +71,11 @@ include 'php/connect_to_db.php';
             <div class="reserve-btn-container" >
               <a type="button" id="reserve-btn-home" class="btn btn-default btn-lg btn-home" href=<?php echo $reserve_btn_link; ?>>Reserve now</a>
             </div>
-            <div class="booking-btn-container" >
-              <button type="button" id="booking-btn-home" class="btn btn-default btn-md btn-home <?php echo $hidden2 ?>" data-toggle="modal" data-target="#modal-search" href=#>Check Booking status</button>
-            </div>
           </div>
         </div>
+        <div class="booking-btn-container" >
+              <button type="button" id="booking-btn-home" class="btn btn-default btn-md btn-home <?php echo $hidden2 ?>" data-toggle="modal" data-target="#modal-search" href=#>Check Booking status</button>
+         </div>
       </div>
     </div>
   </header>

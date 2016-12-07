@@ -18,8 +18,6 @@
   $query = "SELECT `password` FROM `user` WHERE `email`='".$_SESSION['email']."';";
   $result = $db->query($query);
   $pw = $result->fetch_assoc();
-  var_dump($_REQUEST['pwd-verification-input']);
-  var_dump($pw);
   if ($_REQUEST['pwd-verification-input'] == $pw["password"]) {
     $query = "DELETE FROM `reserve` WHERE `Reserve_Code`=".$_REQUEST['reserve_code_to_cancel'].";";
     $result = $db->query($query);

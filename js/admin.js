@@ -11,6 +11,7 @@ $(window).ready(function () {
 	var tempFBVal =  $('#fb-link-input').val();
 	var tempEmailVal =  $('#email-input').val();
 
+
 	$('.confirm-payment-btn').click(function (e) {
 		var value = $(this).parent().parent().attr('id');
 		var newVal = $('#'+value+'-resnum').val();
@@ -156,7 +157,120 @@ $(window).ready(function () {
 		}
 		$('#inputform').submit();
 	});
+
+	$(".reset-btn").click(function (e) {
+		$(".cb-filter").removeAttr("checked");
+		$(".cb-filter").change();
+	});
+
+	$("#export-btn").click(function (e) {
+		e.preventDefault();
+		var name = [], resNum = [], date = [], time = [], route = [], seat = [], price = [], busNum = [], mobile = [];
+		$(".tr-reserve").each(function (e) {
+			if (!$(this).hasClass("hidden")) {
+				name.push($(this).children(".name").val());
+				resNum.push($(this).children(".resnum").val());
+				date.push($(this).children(".date").val());
+				time.push($(this).children(".time").val());
+				route.push($(this).children(".route").val());
+				seat.push($(this).children(".seat").val());
+				price.push($(this).children(".price").val());
+				busNum.push($(this).children(".busno").val());
+				mobile.push($(this).children(".phone").val());
+			}
+		});
+		var offset = 45;
+		var width = 520;
+		var height = 50+(name.length*10);
+		var doc = new jsPDF({
+	    orientation: 'landscape',
+	    unit: 'px',
+	    format: [width, height]
+	  });
+	  doc.setFontSize(20);
+		doc.text(10, 15, "List of Reservations");
+	  doc.setFontSize(10);
+		doc.text(10, 30, "Name");
+		doc.text(85, 30, "Res#");
+		doc.text(140, 30, "Date");
+		doc.text(190, 30, "Time");
+		doc.text(230, 30, "Route");
+		doc.text(330, 30, "Seats");
+		doc.text(400, 30, "Price");
+		doc.text(425, 30, "Mobile");
+		doc.text(480, 30, "Bus#");
+		for (var i = 0; i < name.length; i++) {
+			doc.text(10, offset+(i*10), name[i]);
+			doc.text(85, offset+(i*10), resNum[i]);
+			doc.text(140, offset+(i*10), date[i]);
+			doc.text(190, offset+(i*10), time[i]);
+			doc.text(230, offset+(i*10), route[i]);
+			doc.text(330, offset+(i*10), seat[i]);
+			doc.text(400, offset+(i*10), price[i]);
+			doc.text(425, offset+(i*10), mobile[i]);
+			doc.text(480, offset+(i*10), busNum[i]);
+		}
+		doc.save('transaction-'+getDateToday());
+	});
+
+	var filter = {
+		select_filter_payment: "iterable",
+		select_filter_terminal: "iterable",
+		select_filter_bus_number: "iterable",
+		select_filter_date: "iterable",
+		select_filter_time: "iterable"
+	};
+
+	$(".cb-filter, .filter-select").change(function (e) {
+		var select, cb;
+		if ($(this).attr("type") === "checkbox") {
+			cb = $(this);
+			select = $(this).siblings("input, select");
+		} else {
+			cb = $(this).siblings(".cb-filter");
+			select = $(this);
+		}
+
+		var option = select.val();
+		if (cb.is(':checked')) {
+			select.removeAttr("disabled");
+			filter[select.attr("id")] = option;
+		} else {
+			select.attr("disabled", "");
+			$(".tr-reserve").removeClass("hidden");
+			filter[select.attr("id")] = "iterable";
+		}
+		checkFilter(filter);
+	});
 });
+
+function checkFilter(filter) {
+	$(".tr-reserve").addClass("hidden");
+	$(".tr-reserve").each(function (e) {
+		if ($(this).hasClass(filter["select_filter_payment"]) &&
+				$(this).hasClass(filter["select_filter_terminal"]) &&
+				$(this).hasClass(filter["select_filter_bus_number"]) &&
+				$(this).hasClass(filter["select_filter_date"]) &&
+				$(this).hasClass(filter["select_filter_time"]))
+				$(this).removeClass("hidden");
+	});
+
+	if (filter["select_filter_payment"] == "" &&
+			filter["select_filter_terminal"] == "" &&
+			filter["select_filter_bus_number"] == "" &&
+			filter["select_filter_date"] == "" &&
+			filter["select_filter_time"] == "")
+			$(".tr-reserve").removeClass("hidden");
+}
+
+function removeFilter() {
+	$(".tr-reserve").removeClass("hidden");
+}
+
+function exportListToPDF() {
+
+}
+
 // Send PDF
 function genPDF(rescode, resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor) {
 	var initialMarginX = 10;

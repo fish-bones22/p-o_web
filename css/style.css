@@ -200,9 +200,9 @@ a:focus {
   background-color: white;
 }
 #booking-btn-home {
-  border: 1px solid white;
+  border: 1px solid grey;
   color: white;
-  background-color: transparent;
+  background-color: rgba(55, 55, 55, 0.3);
 }
 #booking-btn-home:focus {
   border: 1px solid gray;

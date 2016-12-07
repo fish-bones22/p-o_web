@@ -23,7 +23,7 @@
       <form method="post" action="search-booking.php">
         <div class="booking-btn-container container-fluid">
           <div class="col-sm-10">
-            <input type="text" name="reserve-code-input" class="form-control" placeholder="Enter 15 digit code">
+            <input type="text" name="reserve-code-input" class="form-control" placeholder="Enter 10 digit code">
           </div>
           <div class="col-sm-2">
             <button type="submit" class="btn btn-default btn-blk">Search</button>

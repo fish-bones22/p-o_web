@@ -39,6 +39,8 @@
   # magiging 1 ang value nito. Kapag hindi successful, 3.
   # Kung sa ibang page galing, 0;
   $edit_success = $_SESSION['admin_edit_success'];
+
+  $date_today = date('Y-m-d');
  ?>
 
 <!DOCTYPE html>
@@ -79,6 +81,7 @@
     <nav class="col-sm-3" id="myScrollspy">
       <ul class="nav nav-pills nav-stacked">
         <li class="active"><a href="#reservation-list">Reservation list</a></li>
+        <li><a href="#trip-settings">Trip Settings</a></li>
         <li><a href="#payment-settings">Payment Details</a></li>
         <li><a href="#transaction-log">Transaction log</a></li>
         <li><a href="#front-page-settings">Front page settings</a></li>
@@ -86,30 +89,97 @@
     </nav>
 
     <div class="col-sm-offset-2">
-
-       <!-- Search bar -->
-      <!--<div class="col-md-11">
-        <div class="form-inline search-bar">
-          <input type="text" name="search" class="form-control">
-          <button type="submit" class="btn btn-default btn-sm" name="submit">
-            <span class="glyphicon glyphicon-search"></span>
-          </button>
-        </div>
-      </div>-->
-
-
       <div id="reservation-list" class="setting-container col-md-11">
         <div class="panel panel-info">
           <div class="panel-heading ">
             <h4><strong>Reservation List</strong></h4>
+            <div id="filter-container" class="container-fluid">
+              <div class="row">
+                <label>Filter by:</label>
+              </div>
+              <?php
+              $querydis = "SELECT * FROM `reserve`
+                           INNER JOIN `user` ON `reserve`.`email`=`user`.`email`
+                           INNER JOIN `trip3` ON `reserve`.`Trip_Code`=`trip3`.`Trip_Code`
+                           INNER JOIN `bus2` ON `reserve`.`Bus_No`=`bus2`.`Bus_No`";
+              ?>
+              <div class="row">
+                <div class="col-lg-3">
+                  <input type="checkbox" class="cb-filter" id="cb_payment_status" value="" >
+                  <label class="form-label">Payment status</label>
+                  <select class="form-control filter-select" id="select_filter_payment" disabled>
+                    <option value="Yes">Paid</option>
+                    <option value="No">Pending confirmation</option>
+                    <option value="Unsettled">Unsettled</option>
+                  </select>
+                </div>
+                <div class="col-lg-2">
+                  <input type="checkbox" class="cb-filter" id="cb_terminal" value="" >
+                  <label class="form-label">Terminal</label>
+                  <select class="form-control filter-select" id="select_filter_terminal" disabled>
+                    <option value="Guinayangan">Guinayangan</option>
+                    <option value="Alabang">Alabang</option>
+                  </select>
+                </div>
+                <div class="col-lg-2">
+                  <input type="checkbox" class="cb-filter" id="cb_bus_number" value="" >
+                  <label class="form-label">Bus number</label>
+                  <select class="form-control filter-select" id="select_filter_bus_number" disabled>
+                    <?php
+                      $resquery = $db->query($querydis);
+                      $numsults = $resquery->num_rows;
+                      $tempArr = array();
+                      for ($i = 0; $i < $numsults; $i++) {
+                        $row = $resquery->fetch_assoc();
+                        if (!(in_array($row['Bus_No'], $tempArr))) {
+                          echo
+                          "<option value=\"".$row['Bus_No']."\">".$row['Bus_No']."</option>";
+                          array_push($tempArr, $row['Bus_No']);
+                        }
+                      }
+                     ?>
+                  </select>
+                </div>
+                <div class="col-lg-2">
+                  <input type="checkbox" class="cb-filter" id="cb-date" value="" >
+                  <label class="form-label">Date</label>
+                  <input type="date" class="form-control filter-select" id="select_filter_date" value="<?php echo $date_today?>" disabled>
+                </div>
+                <div class="col-lg-2">
+                  <input type="checkbox" class="cb-filter" id="cb_time" value="" >
+                  <label class="form-label">Time</label>
+                  <select class="form-control filter-select" id="select_filter_time" disabled>
+                    <?php
+                      $resquery = $db->query($querydis);
+                      $numsults = $resquery->num_rows;
+                      $tempArr = array();
+                      for ($i = 0; $i < $numsults; $i++) {
+                        $row = $resquery->fetch_assoc();
+                        if (!(in_array($row['DeptTime'], $tempArr))) {
+                          echo
+                          "<option value=\"".strtotime($row['DeptTime'])."\">".$row['DeptTime']."</option>";
+                          array_push($tempArr, $row['DeptTime']);
+                        }
+                      }
+                     ?>
+                  </select>
+                </div>
+                <div class="col-lg-1">
+                  <button class="close reset-btn">&times;</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="panel-body">
-              <table class="reservation-table table">
+              <table class="reservation-table table" id="list-export">
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Reservation</th>
+                    <th>Res #</th>
                     <th>Date</th>
+                    <th>Time</th>
+                    <th>Route</th>
+                    <th>Seats</th>
                     <th>Price</th>
                     <th>Mobile</th>
                     <th>Payment status</th>
@@ -118,19 +188,18 @@
                 <tbody>
                   <?php
                   // Loop database row for reservation list contents from the database
-                  $querydis = "SELECT * FROM `reserve`
-                               INNER JOIN `user` ON `reserve`.`email`=`user`.`email`
-                               INNER JOIN `trip3` ON `reserve`.`Trip_Code`=`trip3`.`Trip_Code`
-                               INNER JOIN `bus2` ON `reserve`.`Bus_No`=`bus2`.`Bus_No`";
                   $resquery = $db->query($querydis);
                   $numsults = $resquery->num_rows;
-
                   for ($i=0; $i < $numsults; $i++) {
-
                     $row1 = $resquery->fetch_assoc();
-                    echo "<tr class=\"iterable\" id='".$row1['Reserve_Code']."'>
+                    $status = "";
+                    if ($row1['cancel'] == "Yes") $status = "Unsettled";
+                    else if ($row1['status'] == "Yes") $status = "Yes";
+                    else if ($row1['status'] == "No") $status = "No";
+                    $terminal = explode(" ", $row1['route'])[0];
+                    echo "<tr class=\"iterable tr-reserve ".$status." ".$row1['Bus_No']." ".$terminal." ".$row1['rDate']." ".strtotime($row1['DeptTime'])."\" id='".$row1['Reserve_Code']."'>
                       <td>
-                        <div class=\"name-label form-input\">".$row1['Fname']." ".$row1['Lname']."</div>
+                        <div class=\"name-label form-input\" >".$row1['Fname']." ".$row1['Lname']."</div>
                       </td>
                       <td>
                         <div class=\"transaction-number form-input\">".$row1['reservation_num']."</div>
@@ -139,24 +208,37 @@
                         <div class=\"date-label form-input\">".$row1['rDate']."</div>
                       </td>
                       <td>
+                        <div class=\"date-label form-input\">".$row1['DeptTime']."</div>
+                      </td>
+                      <td>
+                        <div class=\"date-label form-input\">".$row1['route']."</div>
+                      </td>
+                      <td>
+                        <div class=\"date-label form-input\">".$row1['seatplan']."</div>
+                      </td>
+                      <td>
                         <div class=\"price-label form-input\">".$row1['tPrice']."</div>
                       </td>
                       <td>
                         <div class=\"mobile-label form-input\">".$row1['phone']."</div>
                       </td>";
                       echo
-                      "<input type=\"hidden\" name=\"".$row1['Reserve_Code']."-trip-code\" id=\"".$row1['Reserve_Code']."-trip-code\" value=\"".$row1['Trip_Code']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-phone\" id=\"".$row1['Reserve_Code']."-phone\" value=\"".$row1['phone']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-mail\" id=\"".$row1['Reserve_Code']."-email\" value=\"".$row1['email']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-busno\" id=\"".$row1['Reserve_Code']."-busno\" value=\"".$row1['Bus_No']."\">
+                      "<input type=\"hidden\" class=\"name\" value=\"".$row1['Fname']." ".$row1['Lname']."\">
+                       <input type=\"hidden\" class=\"date\" value=\"".$row1['rDate']."\">
+                       <input type=\"hidden\" class=\"price\" value=\"".$row1['tPrice']."\">
+                       <input type=\"hidden\" class=\"\" name=\"".$row1['Reserve_Code']."-trip-code\" id=\"".$row1['Reserve_Code']."-trip-code\" value=\"".$row1['Trip_Code']."\">
+                       <input type=\"hidden\" class=\"phone\" name=\"".$row1['Reserve_Code']."-phone\" id=\"".$row1['Reserve_Code']."-phone\" value=\"".$row1['phone']."\">
+                       <input type=\"hidden\" class=\"email\" name=\"".$row1['Reserve_Code']."-mail\" id=\"".$row1['Reserve_Code']."-email\" value=\"".$row1['email']."\">
+                       <input type=\"hidden\" class=\"busno\" name=\"".$row1['Reserve_Code']."-busno\" id=\"".$row1['Reserve_Code']."-busno\" value=\"".$row1['Bus_No']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-fname\" id=\"".$row1['Reserve_Code']."-fname\" value=\"".$row1['Fname']."\">
                        <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-lname\" id=\"".$row1['Reserve_Code']."-lname\" value=\"".$row1['Lname']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-resnum\" id=\"".$row1['Reserve_Code']."-resnum\" value=\"".$row1['reservation_num']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-time\" id=\"".$row1['Reserve_Code']."-time\" value=\"".$row1['DeptTime']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-seat\" id=\"".$row1['Reserve_Code']."-seat\" value=\"".$row1['seatplan']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-driver\" id=\"".$row1['Reserve_Code']."-driver\" value=\"".$row1['Bus_Driver']."\">
-                       <input type=\"hidden\" name=\"".$row1['Reserve_Code']."-conductor\" id=\"".$row1['Reserve_Code']."-conductor\" value=\"".$row1['Bus_Conductor']."\">";
+                       <input type=\"hidden\" class=\"resnum\" name=\"".$row1['Reserve_Code']."-resnum\" id=\"".$row1['Reserve_Code']."-resnum\" value=\"".$row1['reservation_num']."\">
+                       <input type=\"hidden\" class=\"time\" name=\"".$row1['Reserve_Code']."-time\" id=\"".$row1['Reserve_Code']."-time\" value=\"".$row1['DeptTime']."\">
+                       <input type=\"hidden\" class=\"seat\" name=\"".$row1['Reserve_Code']."-seat\" id=\"".$row1['Reserve_Code']."-seat\" value=\"".$row1['seatplan']."\">
+                       <input type=\"hidden\" class=\"route\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">
+                       <input type=\"hidden\" class=\"status\" name=\"".$row1['Reserve_Code']."-status\" id=\"".$row1['Reserve_Code']."-status\" value=\"".$row1['status']."\">
+                       <input type=\"hidden\" class=\"driver\" name=\"".$row1['Reserve_Code']."-driver\" id=\"".$row1['Reserve_Code']."-driver\" value=\"".$row1['Bus_Driver']."\">
+                       <input type=\"hidden\" class=\"conductor\" name=\"".$row1['Reserve_Code']."-conductor\" id=\"".$row1['Reserve_Code']."-conductor\" value=\"".$row1['Bus_Conductor']."\">";
                       // Check if payment status is true or false
                     if ($row1['status']=='Yes') {
                         echo
@@ -192,6 +274,9 @@
               </button>
               <button type="button" class="btn btn-default btn-sm" id="reserve-cancel-btn">
                 <span class="glyphicon glyphicon-remove"></span>Cancel
+              </button>
+              <button type="button" class="btn btn-default btn-sm" id="export-btn">
+                <span class="glyphicon glyphicon-edit"></span>Export to PDF
               </button>
           </div>
         </div>

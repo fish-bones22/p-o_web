@@ -92,7 +92,6 @@ function genPDF() {
   var lname = $('#lname').val();
   var from = $('#trip-from').val();
   var to = $('#trip-to').val();
-  console.log(to);
   var depDate = $('#departure-date').val();
   var depTime = $('#departure-time').val();
   var busType = $('#bus-type').val();

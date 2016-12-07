@@ -78,15 +78,15 @@
           <a class='login-navbar' href=<?php echo $link.'#';?>>Sign in</a>
         </li>
         <li class='<?php echo $hidden1; ?>'>
-          <a class='dropdown-toggle' data-trigger='hover' data-toggle="dropdown" href="#"><?php echo $acc;?>
-            <span class="caret"></span>
+          <a class='account-settings' href="accountsettings.php"><?php echo $acc;?>
           </a>
-          <ul class="dropdown-menu">
-            <li class="dropdown-header"> </li>
-            <li><a href="accountsettings.php">Account settings</a></li>
-            <li><a href="php/signout.php">Sign out</a></li>
-          </ul>
         </li>
+
+ <li class='<?php echo $hidden1; ?>'>
+ <a href="php/signout.php">Sign out</a>
+  </li>
+
+
       </ul>
     </div>
     <!-- /.navbar-collapse -->
