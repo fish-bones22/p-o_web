@@ -10,7 +10,7 @@
       $lname=$_REQUEST["fname"];
 
     $query = "SELECT * FROM `user` WHERE `email` LIKE '".$_SESSION['email']."';";
-
+    
     $result = $db->query($query);
     $numresults = $result->num_rows;
     $row = $result->fetch_assoc();
@@ -22,7 +22,7 @@
     $lname = $row['Lname'];
     $mobile = $row['phone'];
     $address = $row['Address'];
-
+    # Get result
     if (!isset($_SESSION['update_success'])) {
       $_SESSION['update_success'] = 0;
     }
