@@ -3,6 +3,7 @@ var WIDTH = 32;
 var seatHeight = parseInt($('.seat').css('height'));
 var seatWidth = parseInt($('.seat').css('width'));
 var selected = [];
+var passengerTypeSelected = [];
 var reservedSeatsCount = 0;
 var departureTime;
 var totalSeats = 55;
@@ -11,6 +12,7 @@ var seatPlan45 = "ssassssassssassssassssassssassssassssassssassssasssssss";
 var seatPlan55 = "sssasssssasssssasssssasssssasssssasssssasssssasssssasssssasssssss";
 var currentBusDetails = {};
 var currentBusTripCode = {};
+var lastSelectedSeatPassengerType = '';
 
 function initFunc() {
   setSeatPlanContainerSize();
@@ -26,6 +28,7 @@ function initVar() {
   reservedSeatsCount = 0;
   currentBusDetails = {};
   currentBusTripCode = {};
+  lastSelectedSeatPassengerType = '';
 }
 
 function initAnimations() {
@@ -36,26 +39,59 @@ function initAnimations() {
 }
 
 function addSeatListener() {
-
-  // Add click event listener to each seats
+  
+  // Add click event listener to each seat.
   $(".seat").click(function (e) {
-    if ($(this).hasClass('occupied')) {
+    if ($(this).hasClass('occupied'))
       return;
-    }
     var index = parseInt($(this).attr('value'));
     var i = selected.indexOf(index);
+    
+    $(this).blur(function () {
+      $(this).popover('hide');
+    });
     if (i === -1) {
-      selected.push(index);
-      $(e.target).addClass("selected"); // Include div in 'selected' class
+        if ($(this).hasClass('pwd')) {
+          var b = togglePWDConfirm();
+          b.then(function (c) {
+            lastSelectedSeatPassengerType = "PWD";
+            selected.push(index);
+            passengerTypeSelected.push(lastSelectedSeatPassengerType);
+            $(e.target).addClass("selected"); // Include div in 'selected' class
+            updateMiscInfo();
+            updateInfos();
+          });
+        }
+        $(this).popover('show');
+        $('.popover-content div').click(function (f) {
+          f.preventDefault();
+          lastSelectedSeatPassengerType = $(this).text();
+          selected.push(index);
+          console.log(lastSelectedSeatPassengerType);
+          passengerTypeSelected.push(lastSelectedSeatPassengerType);
+          $(e.target).addClass("selected"); // Include div in 'selected' class
+          updateMiscInfo();
+          updateInfos();
+        });
     } else {
+      $(this).popover('hide');
       selected.splice(i, 1);
+      passengerTypeSelected.splice(i, 1);
       $(e.target).removeClass("selected"); // Remove div in 'selected' class
     }
     updateMiscInfo();
     updateInfos();
   });
   // Enable popovers on reserved seats
-  $('[data-toggle="popover"]').popover();
+  $('.occupied').popover();
+  // Enable popovers on pwd seats
+  $('.pwd').popover();
+  // Enable popovers on available seats
+  $('.seat').popover({
+    content: $(".seat-dropdown").html(),
+    html: true,
+    trigger: 'click'
+  });
 }
 
 function initListeners() {
@@ -70,7 +106,6 @@ function initListeners() {
     addSeatListener();
     updateMiscInfo();
   });
-  // FOR DEBUG
   $('#trip-from-select').change(function (e) {
     updateSelect();
     updateBusSelect();
@@ -105,7 +140,9 @@ function initListeners() {
 
   $('#reserve-btn').click(function (e) {
     var str = exportSeatPlan();
+    var str2 = exportPassengerTypes();
     $('.reserved-seats-after').attr('value', str);
+    $('.passenger-type-after').attr('value', str2);
     $('.total-seats').attr('value', totalSeats);
     $('.trip-code').attr('value', tripCode);
     if (selected.length === 0) {
@@ -118,7 +155,7 @@ function initListeners() {
 
   $('.close').click(function (e) {
     $('#empty-selection-alert').hide();
-  })
+  });
 }
 
 function setSeatPlanContainerSize() {
@@ -173,14 +210,25 @@ function buildSeatPlan() {
         if (reservedSeats.indexOf(seatNum+"") >= 0) {
           box.attr('class', 'seat occupied');
           box.attr('value', seatNum);
-          box.attr('data-toggle', 'popover'); //
-          box.attr('data-trigger', 'hover');  // Add popovers to reserved seat
-          box.attr('data-placement', 'top');  //
+          box.attr('data-toggle',   'popover');  //
+          box.attr('data-trigger',    'hover');  // Add popovers to reserved seat
+          box.attr('data-placement',    'top');  //
           box.attr('data-content', 'Reserved');
           reservedSeatsCount++;
         } else {
           box.attr('class', 'seat');
+          box.attr('tabindex', 0);
           box.attr('value', seatNum); // Set the number of the seat
+        }
+        // Add PWD designation in seats 0, 1, 2.
+        if (seatNum < 3) {
+          box.addClass("pwd");
+          if (!box.hasClass("occupied")) {
+            box.attr('data-toggle',   'popover');  //
+            box.attr('data-trigger',    'hover');  // Add popovers to reserved seat
+            box.attr('data-placement',    'top');  //
+            box.attr('data-content', 'For PWD only');
+          }
         }
         seatNum++;
       } else if (charToTest === 'a')
@@ -213,7 +261,11 @@ function updateInfos() {
   $(".reserved-seats-info").text("Reserved seats: " + reservedSeatsCount);
   $(".selected-seats-info").text("Selected seats: " + (selected.length));
 }
-
+/*
+* Export current seatplan by into string sequence of seat numbers
+* seperated by commas.
+# Returns string
+*/
 function exportSeatPlan() {
   var str = "";
   for (var i = 0; i < selected.length; i++) {
@@ -222,7 +274,34 @@ function exportSeatPlan() {
   return str.substring(0, str.length - 1);
 }
 
+function exportPassengerTypes() {
+  var st = "", pwd = 0, regular = 0, senior = 0, student = 0;
+  for (var i = 0; i < passengerTypeSelected.length; i++) {
+    if (passengerTypeSelected[i] === "Regular")
+      regular++;
+    else if (passengerTypeSelected[i] === "Student")
+      student++;
+    else if (passengerTypeSelected[i] === "Senior")
+      senior++;
+    else if (passengerTypeSelected[i] === "PWD")
+      pwd++;
+  }
+  if (regular > 0)
+    st += "reg"+regular+",";
+  if (student > 0)
+    st += "stu"+student+",";
+  if (senior > 0)
+    st += "sen"+senior+",";
+  if (pwd > 0)
+    st += "pwd"+pwd+",";
+  return st.substring(0, st.length-1);
+}
 
+/*
+* Update select options when bus-type radio buttons 
+* and trip-from select changed, filtering options that
+* are not available.
+*/
 function updateSelect() {
   var busType = $('input:radio[name=bus-type]:checked').val();
   var from = $("#trip-from-select").val();
@@ -260,8 +339,8 @@ function updateSelect() {
   });
 }
 /*
- *
- *
+* Check if the destination selected option is 'Cubao'
+* to filter out unavailable options.
 */
 function checkDestSelect() {
   var dest = $("#trip-to-select").val();
@@ -327,7 +406,6 @@ function updateSeatPlan() {
    *   rDate:
    *   seatPlan:
    * }]
-   *
   **/
   for (var i = 0; i < seatPlanArr.length; i++) {
     var sp = seatPlanArr[i];
@@ -345,7 +423,8 @@ function updateMiscInfo() {
   var busType = $('input:radio[name=bus-type]:checked').val();
   var start = $("#trip-from-select").val();
   var dest = $("#trip-to-select").val();
-  var j, k, price = 0, priceEach;
+  var j, k, priceTotal = 0, priceStudent = 0, pricePWD = 0, priceSenior = 0, priceReg = 0, priceEach;
+  var numOfReg = 0, numOfStudents = 0, numOfPWD = 0, numOfSenior = 0;
   // index: [   0       1       2        3    ]
   //        (From_G, From_A, O_Price, A_Price);
   if (start === 'Guinayangan')  j = 0;
@@ -355,31 +434,76 @@ function updateMiscInfo() {
   for (var i = 0; i < priceArray.length; i++) {
     if (dest === priceArray[i][j]) {
       priceEach = parseInt(priceArray[i][k]);
-      price = priceEach*selected.length;
+    }
+  }
+  for (var i = 0; i < selected.length; i++) {
+    if (passengerTypeSelected[i] === "Regular") {
+      priceReg += priceEach;
+      numOfReg++;
+    }
+    else if (passengerTypeSelected[i] === "Student") {
+      priceStudent += priceEach*(0.8);
+      numOfStudents++;
+    }
+    else if (passengerTypeSelected[i] === "PWD") {
+      pricePWD += priceEach*(0.8);
+      numOfPWD++;
+    }
+    else if (passengerTypeSelected[i] === "Senior") {
+      priceSenior += priceEach*(0.8);
+      numOfSenior++;
     }
   }
   // Empty selection guard
   if (selected.length < 1) {
     easeOut($(".reserve-btn-container"));
-  } else {
-    easeIn($(".reserve-btn-container"));
-  }
-  // Hide price if it has no value yet
-  if (price <= 0) {
     easeOut($("#price-container"));
   } else {
+    easeIn($(".reserve-btn-container"));
     easeIn($("#price-container"));
-    // Grammar check
-    var st;
-    if (selected.length > 1) {
-      st = "seats";
-    } else {
-      st = "seat";
-    }
-    var text = selected.length+" "+st+" × P"+priceEach+" = P"+price
-    $('#price-input').attr('value', price);
-    $('.price-p').text(text);
   }
+  // Regular
+  if (priceReg <= 0) {
+    easeOut($(".price-reg"));
+  } else {
+    var st = "seat";
+    if (numOfReg > 1)
+      st = "seats";
+    $(".price-reg").text("Regular: "+numOfReg + " " + st + " × P" + priceEach);
+    easeIn($(".price-reg"));
+  }
+  // Student
+  if (priceStudent <= 0) {
+    easeOut($(".price-student"));
+  } else {
+    var st = "seat";
+    if (numOfStudents > 1)
+      st = "seats";
+    $(".price-student").text("Student: "+numOfStudents + " " + st + " × P" + (priceEach*0.8));
+    easeIn($(".price-student"));
+  }
+    // Senior
+  if (priceSenior <= 0) {
+    easeOut($(".price-senior"));
+  } else {
+    var st = "seat";
+    if (numOfSenior > 1)
+      st = "seats";
+    $(".price-senior").text("Senior: "+ numOfSenior + " " + st + " × P" + (priceEach*0.8));
+    easeIn($(".price-senior"));
+  }
+  // PWD
+  if (pricePWD <= 0) {
+    easeOut($(".price-pwd"));
+  } else {
+    var st = "seat";
+    if (numOfSenior > 1)
+      st = "seats";
+    $(".price-pwd").text("PWD: "+ numOfPWD + " " + st + " × P" + (priceEach*0.8));
+    easeIn($(".price-pwd"));
+  }
+  $(".price-total").text("Total: P"+(pricePWD+priceReg+priceSenior+priceStudent));
+  $("#price-input").attr("value", (pricePWD+priceReg+priceSenior+priceStudent));
 }
 
 function convertToStandard(militaryTime) {
@@ -404,6 +528,22 @@ function convertToStandard(militaryTime) {
     minute = "00";
 
   return standardTime+":"+minute+" "+period;
+}
+
+function togglePWDConfirm() {
+  var dfd = jQuery.Deferred();
+  var thisModal = $("#modal-pwd");
+  thisModal.modal('show');
+  $("#modal-yes-button").click(function (e) {
+    thisModal.modal('hide');
+    dfd.resolve(1);
+    return 1;
+  });
+  $("#modal-no-button").click(function (e) {
+    thisModal.modal('hide');
+    return 0;
+  });
+  return dfd.promise();
 }
 
 function easeIn(element) {

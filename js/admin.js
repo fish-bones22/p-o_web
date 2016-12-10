@@ -35,9 +35,11 @@ $(window).ready(function () {
 		var route = $('#'+value+'-route').val();
 		var deptime = $('#'+value+'-time').val();
 		var seatNum = $('#'+value+'-seat').val();
+    var passenger = $('#'+value+'-passenger').val();
 		var driver = $('#'+value+'-driver').val();
 		var conductor = $('#'+value+'-conductor').val();
-		var pdf = genPDF(value, newVal, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor);
+		var price = $('#'+value+'-price').val();
+		var pdf = genPDF(value, newVal, receipt, fname, lname, busNumber, email, number, route, seatNum, passenger, driver, conductor, price);
 		saveFileToServer(pdf, newVal);
 	});
 
@@ -165,7 +167,7 @@ $(window).ready(function () {
 
 	$("#export-btn").click(function (e) {
 		e.preventDefault();
-		var name = [], resNum = [], date = [], time = [], route = [], seat = [], price = [], busNum = [], mobile = [];
+		var name = [], resNum = [], date = [], time = [], route = [], seat = [], pass = [], price = [], busNum = [], mobile = [];
 		$(".tr-reserve").each(function (e) {
 			if (!$(this).hasClass("hidden")) {
 				name.push($(this).children(".name").val());
@@ -175,13 +177,14 @@ $(window).ready(function () {
 				route.push($(this).children(".route").val());
 				seat.push($(this).children(".seat").val());
 				price.push($(this).children(".price").val());
+        pass.push($(this).children(".passenger").val());
 				busNum.push($(this).children(".busno").val());
 				mobile.push($(this).children(".phone").val());
 			}
 		});
 		var offset = 45;
-		var width = 520;
-		var height = 50+(name.length*10);
+		var width = 600;
+		var height = 70+(name.length*10);
 		var doc = new jsPDF({
 	    orientation: 'landscape',
 	    unit: 'px',
@@ -196,9 +199,10 @@ $(window).ready(function () {
 		doc.text(190, 30, "Time");
 		doc.text(230, 30, "Route");
 		doc.text(330, 30, "Seats");
-		doc.text(400, 30, "Price");
-		doc.text(425, 30, "Mobile");
-		doc.text(480, 30, "Bus#");
+    doc.text(410, 30, "Passenger type/s");
+		doc.text(485, 30, "Price");
+		doc.text(510, 30, "Mobile");
+		doc.text(565, 30, "Bus#");
 		for (var i = 0; i < name.length; i++) {
 			doc.text(10, offset+(i*10), name[i]);
 			doc.text(85, offset+(i*10), resNum[i]);
@@ -206,10 +210,14 @@ $(window).ready(function () {
 			doc.text(190, offset+(i*10), time[i]);
 			doc.text(230, offset+(i*10), route[i]);
 			doc.text(330, offset+(i*10), seat[i]);
-			doc.text(400, offset+(i*10), price[i]);
-			doc.text(425, offset+(i*10), mobile[i]);
-			doc.text(480, offset+(i*10), busNum[i]);
+			doc.text(410, offset+(i*10), pass[i]);
+			doc.text(485, offset+(i*10), price[i]);
+			doc.text(510, offset+(i*10), mobile[i]);
+			doc.text(565, offset+(i*10), busNum[i]);
 		}
+    doc.setFontSize(8);
+    doc.text(390, height - 25, "*Note: reg - Regular; stu - Student; sen - Senior; pwd - PWD.")
+    doc.text(390, height - 17, "Example: reg2 - 2 regular; stu1 - 1 student")
 		doc.save('transaction-'+getDateToday());
 	});
 
@@ -272,16 +280,41 @@ function exportListToPDF() {
 }
 
 // Send PDF
-function genPDF(rescode, resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, driver, conductor) {
+function genPDF(rescode, resnum, receipt, fname, lname, busNumber, email, number, route, seatNum, passenger, driver, conductor, price) {
 	var initialMarginX = 10;
 	var initialMarginY = 10;
 	var x = 0;
 	var y = 0;
 	var offset = 4;
+  var passenger_ = passenger;
+  // Format passenger type list
+  passengerArr = passenger_.split(",");
+  var regular, student, senior, pwd;
+  for (var i = 0; i < passengerArr.length; i++) {
+    if (passengerArr[i].substring(0, 3) === "reg")
+      regular = parseInt(passengerArr[i].substring(3));
+    else if (passengerArr[i].substring(0, 3) === "stu")
+      student = parseInt(passengerArr[i].substring(3));
+    else if (passengerArr[i].substring(0, 3) === "sen")
+      senior = parseInt(passengerArr[i].substring(3));
+    else if (passengerArr[i].substring(0, 3) === "pwd")
+      pwd = parseInt(passengerArr[i].substring(3));
+  }
+  var passengerString = "";
+  if (regular > 0)
+    passengerString += regular+" reg, ";
+  if (student > 0)
+    passengerString += student+" student, ";
+  if (senior > 0)
+    passengerString += senior+" senior, ";
+  if (pwd > 0)
+    passengerString += pwd+" pwd, ";
+  passengerString = passengerString.substring(0, passengerString.length - 2);
+  
 	doc = new jsPDF({
 		orientation: 'portrait',
 		unit: 'px',
-		format: [210, 240]
+		format: [210, 280]
 	});
 	doc.setFontSize(20);
 	doc.text(10, 20, "P&O Transport Corp.");
@@ -296,7 +329,9 @@ function genPDF(rescode, resnum, receipt, fname, lname, busNumber, email, number
 	doc.text(20, 160, "Driver: "+driver);
 	doc.text(20, 180, "Cond: "+conductor);
 	doc.text(20, 200, "Reserved: "+seatNum);
-	doc.text(20, 220, "Receipt #: " + resnum);
+	doc.text(20, 220, passengerString);
+	doc.text(20, 240, "Price: "+price);
+	doc.text(20, 260, "Receipt #: " + resnum);
 	return doc.output(); //returns raw body of resulting PDF returned as a string as per the plugin documentation.
 }
 

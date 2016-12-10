@@ -225,7 +225,7 @@
                       echo
                       "<input type=\"hidden\" class=\"name\" value=\"".$row1['Fname']." ".$row1['Lname']."\">
                        <input type=\"hidden\" class=\"date\" value=\"".$row1['rDate']."\">
-                       <input type=\"hidden\" class=\"price\" value=\"".$row1['tPrice']."\">
+                       <input type=\"hidden\" class=\"price\" id=\"".$row1['Reserve_Code']."-price\" value=\"".$row1['tPrice']."\">
                        <input type=\"hidden\" class=\"\" name=\"".$row1['Reserve_Code']."-trip-code\" id=\"".$row1['Reserve_Code']."-trip-code\" value=\"".$row1['Trip_Code']."\">
                        <input type=\"hidden\" class=\"phone\" name=\"".$row1['Reserve_Code']."-phone\" id=\"".$row1['Reserve_Code']."-phone\" value=\"".$row1['phone']."\">
                        <input type=\"hidden\" class=\"email\" name=\"".$row1['Reserve_Code']."-mail\" id=\"".$row1['Reserve_Code']."-email\" value=\"".$row1['email']."\">
@@ -235,6 +235,7 @@
                        <input type=\"hidden\" class=\"resnum\" name=\"".$row1['Reserve_Code']."-resnum\" id=\"".$row1['Reserve_Code']."-resnum\" value=\"".$row1['reservation_num']."\">
                        <input type=\"hidden\" class=\"time\" name=\"".$row1['Reserve_Code']."-time\" id=\"".$row1['Reserve_Code']."-time\" value=\"".$row1['DeptTime']."\">
                        <input type=\"hidden\" class=\"seat\" name=\"".$row1['Reserve_Code']."-seat\" id=\"".$row1['Reserve_Code']."-seat\" value=\"".$row1['seatplan']."\">
+                       <input type=\"hidden\" class=\"passenger\" name=\"".$row1['Reserve_Code']."-passenger\" id=\"".$row1['Reserve_Code']."-passenger\" value=\"".$row1['passenger']."\">
                        <input type=\"hidden\" class=\"route\" name=\"".$row1['Reserve_Code']."-route\" id=\"".$row1['Reserve_Code']."-route\" value=\"".$row1['route']."\">
                        <input type=\"hidden\" class=\"status\" name=\"".$row1['Reserve_Code']."-status\" id=\"".$row1['Reserve_Code']."-status\" value=\"".$row1['status']."\">
                        <input type=\"hidden\" class=\"driver\" name=\"".$row1['Reserve_Code']."-driver\" id=\"".$row1['Reserve_Code']."-driver\" value=\"".$row1['Bus_Driver']."\">

@@ -242,7 +242,6 @@
               </div>
             </div>
             <!--bus no.-->
-            <!-- Use PHP to add options base on values above -->
             <div class="form-group">
               <label class="form-label">Available buses</label>
               <select id="bus-select" class="form-control" name="bus-number">
@@ -250,8 +249,24 @@
               </select>
             </div>
             <div class="container-fluid hidden" id="price-container">
-              <div class="col-sm-12"><label>Price:&nbsp;</label><p class="price-p"></p></div>
-              <input type="hidden" name="price-input" id="price-input"></p>
+              <div class="row"><label>Price:&nbsp;</label></div>
+              <div class="row">
+                <p class="price-reg"></p>
+              </div>
+              <div class="row">
+                <p class="price-student"></p>
+              </div>
+              <div class="row">
+                <p class="price-senior"></p>
+              </div>
+              <div class="row">
+                <p class="price-pwd"></p>
+              </div>
+              <div class="row">
+                <p class="price-total"></p>
+              </div>
+              <div><p class="small">*20% fare discount to students, senior citizens and PWDs</p></div>
+              <input type="hidden" name="price-input" id="price-input">
             </div>
         </div>
       </div>
@@ -264,11 +279,21 @@
           <input class="total-seats" name="total-seats" type="hidden" value=""></input>
           <input class="reserved-seats" type="hidden" value=""></input>
           <input class="reserved-seats-after" name="reserved-seats-after" type="hidden" value=""></input>
+          <input class="passenger-type-after" name="passenger-type-after" type="hidden" value=""></input>
           <input class="trip-code" name="trip-code" type="hidden" value=""></input>
+         
           <!-- Display "Front" text -->
           <div class="front-rear-info"><p>Front</p></div>
           <!-- Seat plan. Elements controlled by JS -->
           <div class="seatplan"><div class="bus-row"><div class="seat"></div></div></div>
+          <div class="hidden">
+            <div class="seat-dropdown">
+              <div><a href="#">Regular</a></div>
+              <div><a href="#">Student</a></div>
+              <div><a href="#">Senior</a></div>
+              <div><a href="#">PWD</a></div>
+            </div>
+          </div>
           <!-- Display "Rear" text -->
           <div class="front-rear-info"><p>Rear</p></div>
           <!-- Display Seat plan informations text -->
@@ -296,6 +321,22 @@
     <div id="map-outside"></div>
     <div id="map"></div>
     <div class="close-button"><span class="glyphicon glyphicon-remove"></span></div>
+  </div>
+  <input type="hidden" id="pwd-confirm-input" value=false>
+  <div class="modal fade" id="modal-pwd" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body form-group form-inline" align="center">
+          <p>Reserve seat as PWD?</p>
+        </div>
+        <div class="modal-footer">
+          <!--will receive a confirmation and the user will recieve a pdf to their email-->
+          <button type=button class="btn btn-default" id="modal-yes-button">Yes</button>
+          <button type=button class="btn btn-default" id="modal-no-button">No</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Bootstrap Core JavaScript -->

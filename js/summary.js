@@ -99,6 +99,7 @@ function genPDF() {
   var totalSeats = $('#total-seats').val();
   var price = $('#price').val();
   var reservation_num = $('#reservation_num').val();
+  var passenger_ = $('#passenger-types').val();
   var img2, doc;
   var width = parseInt($('#screen-seatplan').css('width'));
   var height = parseInt($('.summary-container').css('height'));
@@ -107,10 +108,33 @@ function genPDF() {
   var x = 0;
   var y = 0;
   var offset = 4;
+  // Format passenger type list
+  passenger = passenger_.split(",");
+  var regular, student, senior, pwd;
+  for (var i = 0; i < passenger.length; i++) {
+    if (passenger[i].substring(0, 3) === "reg")
+      regular = parseInt(passenger[i].substring(3));
+    else if (passenger[i].substring(0, 3) === "stu")
+      student = parseInt(passenger[i].substring(3));
+    else if (passenger[i].substring(0, 3) === "sen")
+      senior = parseInt(passenger[i].substring(3));
+    else if (passenger[i].substring(0, 3) === "pwd")
+      pwd = parseInt(passenger[i].substring(3));
+  }
+  var passengerString = "";
+  if (regular > 0)
+    passengerString += regular+" reg, ";
+  if (student > 0)
+    passengerString += student+" student, ";
+  if (senior > 0)
+    passengerString += senior+" senior, ";
+  if (pwd > 0)
+    passengerString += pwd+" pwd, ";
+  passengerString = passengerString.substring(0, passengerString.length - 2);
   doc = new jsPDF({
     orientation: 'portrait',
     unit: 'px',
-    format: [470, 200]
+    format: [490, 200]
   });
   doc.setFontSize(20);
   doc.text(10, 20, "P&O Transport Corp.");
@@ -126,10 +150,11 @@ function genPDF() {
   doc.text(35, 180, busNumber+", "+busType+", "+totalSeats+" seats");
   doc.text(30, 200, "Price: P"+price);
   doc.text(30, 220, "Res Num: "+reservation_num);
+  doc.text(30, 240, passengerString);
   html2canvas($('#screen-seatplan'), {
     onrendered: function(canvas){
       img2 = canvas.toDataURL("image/jpg");
-      doc.addImage(img2,'JPEG', 10, 235);
+      doc.addImage(img2,'JPEG', 10, 255);
       doc.save('reservation-'+getDateToday());
     }
   });

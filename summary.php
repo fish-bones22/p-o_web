@@ -92,6 +92,7 @@
                 <input type="hidden" name="bus-number" value=<?php echo $_REQUEST['bus-number']?> id="bus-number">
                 <input type="hidden" value=<?php echo $_REQUEST['total-seats']?> id="total-seats">
                 <input type="hidden" name="reserved-seats" value=<?php echo $_REQUEST['reserved-seats-after']?> id="reserved-seats">
+                <input type="hidden" name="passenger-types" value=<?php echo $_REQUEST['passenger-type-after']?> id="passenger-types">
                 <input type="hidden" name="trip-code" value=<?php echo $_REQUEST['trip-code']?> id="trip-code"></input>
               </div>
             </div>
@@ -102,7 +103,25 @@
             <input type="hidden" name="price" value=<?php echo $_REQUEST['price-input']?> id="price" name="price">
           </div>
         </div>
-
+        <div class="container-fluid" style="padding-left:30px">
+          <?php
+            $passenger_types = explode(",", $_REQUEST['passenger-type-after']);
+            for ($i = 0; $i < sizeOf($passenger_types); $i++) {
+              if (substr($passenger_types[$i], 0, 3) == "reg")
+                echo
+                "<div class=\"col-sm-12\">".substr($passenger_types[$i], 3)." regular</div>";
+              if (substr($passenger_types[$i], 0, 3) == "stu")
+                echo
+                "<div class=\"col-sm-12\">".substr($passenger_types[$i], 3)." student</div>";
+              if (substr($passenger_types[$i], 0, 3) == "sen")
+                echo
+                "<div class=\"col-sm-12\">".substr($passenger_types[$i], 3)." senior citizen</div>";
+              if (substr($passenger_types[$i], 0, 3) == "pwd")
+                echo
+                "<div class=\"col-sm-12\">".substr($passenger_types[$i], 3)." PWD</div>";
+            }
+          ?>
+          </div>
         <div class="container-fluid form-group">
           <label for="smart">Smart Padala: <?php echo $row1['smart_number'];?></label><br>
           <label for="smart">Send to mobile number: <?php echo $row1['mobile_number'];?></label><br>
