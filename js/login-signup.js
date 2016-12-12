@@ -80,6 +80,7 @@ $(window).ready(function(){
     //validations
     fields : {
       Fname : {
+        trigger: "blur",
         validators : {
           notEmpty : {
           	message:"First name is required"
@@ -87,27 +88,37 @@ $(window).ready(function(){
        	}
      	},
      	Lname : {
+        trigger: "blur",
        	validators : {
        		notEmpty : {
        			message : "Last name is required"
-    			},
-     			different : {
-     				field : "Fname",
-       			message : "First name and Last name can not be match"
-       		}
+    			}
        	}
       },
       email : {
+        threshold : 5,
+        verbose : false,
         validators : {
         	notEmpty : {
         		message:"Please provide an email address"
         	},
           regexp: {
-            regexp: '^[^@\\s]+@([^@\\s]+\\.)+[^@\\s]+$',
+            message:"The email address is not valid",
+            regexp: '^[^@\\s]+@([^@\\s]+\\.)+[^@\\s]+$'
+          },
+          remote: {
+            message: "email address is not available",
+            url: 'php/validate_email.php',
+            data: {
+              type: 'email'
+            },
+            type: 'POST',
+            delay: 1000
           }
      	  }
       },
      	Password1 : {
+        threshold : 5,
      		validators : {
      			notEmpty : {
      				message : "Password is required and cannot be empty"
@@ -123,6 +134,7 @@ $(window).ready(function(){
      		}
      	},
      	Confirm : {
+        threshold : 5,
      		validators : {
      			identical : {
      				field : "Password1",
@@ -133,16 +145,12 @@ $(window).ready(function(){
     	Phone : {
      		validators : {
        		notEmpty : {
-    				message : "Contact number is required"
+    				message : "Contact number is required",
+            delay: 2000
      			},
        		numeric : {
       			message : "phone \ doesn'\ t match the specific format "
-       		},
-    			stringLength :{
-     				min : 11,
-       			max : 11,
-       			message : "Input must be 11 digits"
-    			}
+       		}
      		}
      	}
     }
