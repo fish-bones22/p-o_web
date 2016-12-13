@@ -232,6 +232,30 @@ include 'php/connect_to_db.php';
         </div>
       </div>
     </div>
+    
+    <!-- eMail modal -->
+    <div class="modal fade" id="modal-email" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header" align="center">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4>Enter reservation code to check booking status</h4>
+          </div>
+          <form id="inputform" action="php/send-email.php" method="post">
+            <div class="modal-body form-group form-inline" align="center">
+              <label>eMail Address: </label>
+              <input type="text" name="reserve-code-input" class="form-control" id="modal-email-address-input" required>
+              <textbox name="reserve-code-input" class="form-control" id="modal-email-message-input" required>
+            </div>
+            <div class="modal-footer">
+              <button type=submit class="btn btn-default" id="modal-yes-button">Search</button>
+              <a class="btn btn-default" id="modal-no-button" data-dismiss="modal" aria-hidden="true" role="button">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer>

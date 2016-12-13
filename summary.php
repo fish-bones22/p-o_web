@@ -93,6 +93,7 @@
                 <input type="hidden" value=<?php echo $_REQUEST['total-seats']?> id="total-seats">
                 <input type="hidden" name="reserved-seats" value=<?php echo $_REQUEST['reserved-seats-after']?> id="reserved-seats">
                 <input type="hidden" name="passenger-types" value=<?php echo $_REQUEST['passenger-type-after']?> id="passenger-types">
+                <input type="hidden" name="passenger-types-listed" value=<?php echo $_REQUEST['passenger-type-listed-after']?> id="passenger-types-listed">
                 <input type="hidden" name="trip-code" value=<?php echo $_REQUEST['trip-code']?> id="trip-code"></input>
               </div>
             </div>

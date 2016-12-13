@@ -57,7 +57,7 @@ function addSeatListener() {
             lastSelectedSeatPassengerType = "PWD";
             selected.push(index);
             passengerTypeSelected.push(lastSelectedSeatPassengerType);
-            $(e.target).addClass("selected"); // Include div in 'selected' class
+            $(e.target).addClass("selected PWD"); // Include div in 'selected' class
             updateMiscInfo();
             updateInfos();
           });
@@ -67,17 +67,16 @@ function addSeatListener() {
           f.preventDefault();
           lastSelectedSeatPassengerType = $(this).text();
           selected.push(index);
-          console.log(lastSelectedSeatPassengerType);
           passengerTypeSelected.push(lastSelectedSeatPassengerType);
-          $(e.target).addClass("selected"); // Include div in 'selected' class
+          $(e.target).addClass("selected "+lastSelectedSeatPassengerType); // Include div in 'selected' class
           updateMiscInfo();
           updateInfos();
         });
     } else {
       $(this).popover('hide');
+      $(e.target).removeClass("selected "+passengerTypeSelected[i]); // Remove div in 'selected' class
       selected.splice(i, 1);
       passengerTypeSelected.splice(i, 1);
-      $(e.target).removeClass("selected"); // Remove div in 'selected' class
     }
     updateMiscInfo();
     updateInfos();
@@ -141,8 +140,10 @@ function initListeners() {
   $('#reserve-btn').click(function (e) {
     var str = exportSeatPlan();
     var str2 = exportPassengerTypes();
+    var str3 = exportListedPassengerTypes();
     $('.reserved-seats-after').attr('value', str);
     $('.passenger-type-after').attr('value', str2);
+    $('.passenger-type-listed-after').attr('value', str3);
     $('.total-seats').attr('value', totalSeats);
     $('.trip-code').attr('value', tripCode);
     if (selected.length === 0) {
@@ -262,7 +263,7 @@ function updateInfos() {
   $(".selected-seats-info").text("Selected seats: " + (selected.length));
 }
 /*
-* Export current seatplan by into string sequence of seat numbers
+* Export current seatplan into string sequence of seat numbers
 * seperated by commas.
 # Returns string
 */
@@ -273,7 +274,11 @@ function exportSeatPlan() {
   }
   return str.substring(0, str.length - 1);
 }
-
+/*
+* Export current seatplan passenger types into string sequence
+* seperated by commas.
+# Returns string
+*/
 function exportPassengerTypes() {
   var st = "", pwd = 0, regular = 0, senior = 0, student = 0;
   for (var i = 0; i < passengerTypeSelected.length; i++) {
@@ -297,6 +302,13 @@ function exportPassengerTypes() {
   return st.substring(0, st.length-1);
 }
 
+function exportListedPassengerTypes() {
+  var str = "";
+  for (var i = 0; i < passengerTypeSelected.length; i++) {
+    str += passengerTypeSelected[i]+',';
+  }
+  return str.substring(0, str.length - 1);
+}
 /*
 * Update select options when bus-type radio buttons 
 * and trip-from select changed, filtering options that

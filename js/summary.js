@@ -4,6 +4,10 @@ function buildSeatPlan() {
   var seatPlan45 = "ssassssassssassssassssassssassssassssassssassssasssssss";
   var seatPlan55 = "sssasssssasssssasssssasssssasssssasssssasssssasssssasssssasssssss";
   var selected = [];
+  var passengerType = [];
+  if ($('#passenger-types-listed').val() !== undefined)
+    passengerType = ($("#passenger-types-listed").val()).split(",");
+  console.log(passengerType);
   var reservedSeatsCount = 0;
   var tripSelectOptions;
   var departureTime;
@@ -17,6 +21,7 @@ function buildSeatPlan() {
   var reservedSeats = [];
   if ($('#reserved-seats').val() !== undefined)
     reservedSeats = $('#reserved-seats').val().split(",");
+  console.log(reservedSeats);
   var ordinary45SpecialPositioning = [7, 8, 11, 12, 15, 16, 19, 20, 23, 24];
   var ordinary55SpecialPositioning = [9, 10, 14, 15, 19, 20, 24, 25, 29, 30];
   var seatNum = 0;
@@ -49,8 +54,11 @@ function buildSeatPlan() {
       var charToTest = seatDetails.charAt((i*seatCol)+j);
       var box = $(document.createElement('div'));
       if (charToTest === 's') {
-        if (reservedSeats.indexOf((seatNum)+"") >= 0) {
-          box.attr('class', 'seat occupied');
+        var ind = reservedSeats.indexOf((seatNum)+"");
+        if (ind >= 0) {
+          console.log(ind)
+          var str = passengerType[ind];
+          box.attr('class', 'seat occupied '+str);
           box.attr('value', seatNum);
           box.attr('data-toggle', 'popover'); //
           box.attr('data-trigger', 'hover');  // Add popovers to reserved seat

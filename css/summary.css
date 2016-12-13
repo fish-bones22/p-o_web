@@ -1,4 +1,3 @@
-
 .summary-container {
   position: relative;
   margin: auto;
@@ -58,6 +57,21 @@
 .occupied {
   color: white;
   background: url(../img/seat-selected.png) no-repeat right top;
+  background-size: contain;
+}
+.occupied.PWD {
+  color: white;
+  background: url(../img/seat-pwd.png) no-repeat right top;
+  background-size: contain;
+}
+.occupied.Student {
+  color: white;
+  background: url(../img/seat-selected-student.png) no-repeat right top;
+  background-size: contain;
+}
+.occupied.Senior {
+  color: white;
+  background: url(../img/seat-selected-senior.png) no-repeat right top;
   background-size: contain;
 }
 .seat-info {

@@ -1,3 +1,4 @@
+
 <?php
   session_start();
   if (!isset($_SESSION['uname'])) {
@@ -279,6 +280,8 @@
           <input class="total-seats" name="total-seats" type="hidden" value=""></input>
           <input class="reserved-seats" type="hidden" value=""></input>
           <input class="reserved-seats-after" name="reserved-seats-after" type="hidden" value=""></input>
+          <input class="reserved-seats-after" name="reserved-seats-after" type="hidden" value=""></input>
+          <input class="passenger-type-listed-after" name="passenger-type-listed-after" type="hidden" value=""></input>
           <input class="passenger-type-after" name="passenger-type-after" type="hidden" value=""></input>
           <input class="trip-code" name="trip-code" type="hidden" value=""></input>
          
@@ -304,9 +307,39 @@
             </div>
             <div class="selected-seats-info col-sm-6">Selected seats:</div>
           </div>
-          <!--button class="btn btn-export">Export</button-->
         </div>
-        <div id="reset">Reset</div>
+        <div id="reset" class="container-fluid">Reset</div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            Legend:
+          </div>
+          <div class="panel-body">
+            <div class="container-fluid">
+              <div class="row form-group">
+                <div class="col-lg-1"><div class="seat-no-hover"></div></div>
+                <div class="col-lg-5">Available</div>
+                <div class="col-lg-1"><div class="seat-no-hover pwd"></div></div>
+                <div class="col-lg-5">Available for PWD</div>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-1"><div class="seat-no-hover occupied"></div></div>
+                <div class="col-lg-2">Reserved</div>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-1"><div class="seat-no-hover selected"></div></div>
+                <div class="col-lg-5">Selected</div>
+                <div class="col-lg-1"><div class="seat-no-hover Student"></div></div>
+                <div class="col-lg-5">Selected-student</div>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-1"><div class="seat-no-hover Senior"></div></div>
+                <div class="col-lg-5">Selected-senior</div>
+                <div class="col-lg-1"><div class="seat-no-hover PWD"></div></div>
+                <div class="col-lg-5">Selected-PWD</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="map-link">

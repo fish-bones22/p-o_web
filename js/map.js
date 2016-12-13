@@ -89,7 +89,7 @@ function initThisMap() {
 }
 
 function initMap() {
-  $('.map-link').click(function (e) {
+  $('.map-link label a').click(function (e) {
     $('.gmap-container').css("visibility","visible");
     initLocations();
     initThisMap();

@@ -76,13 +76,35 @@
   color: black;
   font-size: 16px;
 }
+.seat-no-hover {
+  background: url(../img/seat.png) no-repeat right top;
+  background-size: contain;
+  position: absolute;
+  height: 22px;
+  width: 30px;
+}
 .pwd {
-  background: url(../img/seat-pwd.png) no-repeat right top;
+  background: url(../img/seat-pwd-no.png) no-repeat right top;
   background-size: contain;
 }
 .selected {
   color: white;
   background: url(../img/seat-selected.png) no-repeat right top;
+  background-size: contain;
+}
+.PWD {
+  color: white;
+  background: url(../img/seat-pwd.png) no-repeat right top;
+  background-size: contain;
+}
+.Student {
+  color: white;
+  background: url(../img/seat-selected-student.png) no-repeat right top;
+  background-size: contain;
+}
+.Senior {
+  color: white;
+  background: url(../img/seat-selected-senior.png) no-repeat right top;
   background-size: contain;
 }
 .seat-info {
